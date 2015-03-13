@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="css/font-awesome.min.css">
 </head>
 <body>
+<script src="js\opiniones.js"></script>
 <div class="wrapper-container">
   <div class="wrapper-header">
     <div class="header">
@@ -24,7 +25,7 @@
       <ul class="submainmenu">
         <li><a href="#">Carrito</a></li>
         <li><a href="#">Ingresar</a></li>
-        <li><a href="#">Salir</a></li>
+        <li><a href="index.html">Salir</a></li>
       </ul>
     </div>    
   </div>
@@ -44,7 +45,8 @@
       <script src="js/jquery.slides.min.js"></script>
       <!-- End SlidesJS Required -->
       <!-- SlidesJS Required: Initialize SlidesJS with a jQuery doc ready -->
-      <script>
+
+   <script>
     $(function() {
       $('#slides').slidesjs({
         width: 960,
@@ -52,19 +54,23 @@
         navigation: false
       });
     });
+
   </script>
-      <!-- End SlidesJS Required -->
+
+        <!-- End SlidesJS Required -->
      <div class="searchbox"><input name="search" type="text" value="Buscar..." size="50" maxlength="50" /></div>
     </div>
         <div class="content">
+
           <h2>Opiniones</h2>
           <div class="comentarios">
           	<div class="item"><img src="img/productPreview01.jpg" width="200" height="200"><span class="itemname">Smart TV 4K</span></div>
             <div class="info">
                 <div class="stars"><span class="tagname">Califica este producto</span><span class="starOn">&nbsp;</span><span class="starOn">&nbsp;</span><span class="starOn">&nbsp;</span><span class="starOff">&nbsp;</span><span class="starOff">&nbsp;</span></div>
                 <h3>Comparte tu opinión</h3>
-                <textarea name="opinion" cols="" rows="8"></textarea>
-                <div class="buttons"><input name="submit" type="submit" value="Enviar"><input name="reset" type="reset" value="Borrar"></div>
+
+                <textarea name="opinion" id="opinion" cols="" rows="8"></textarea>
+                <div class="buttons"><input name="submit" type="submit" value="Enviar"><input name="reset" type="reset" value="Borrar" onclick="BorraComments()"></div>
 			</div>
             </div>
         </div>
