@@ -1,9 +1,9 @@
 <?php
-include_once 'procesadorDeRespuestas.php';
+include_once 'src/main/controlador/procesadorDeRespuestas.php';
 include_once 'src/main/negocios/Negocios.php';
 class Controlador {
 	private $_formato;
-	private $_metodo;
+	private $_prefijo;
 	private $_parametros;
 	private $_procesadorDeRespuestas;
 	private $_negocios;
@@ -17,19 +17,19 @@ class Controlador {
 		
 		switch($_SERVER['REQUEST_METHOD']) {
 			case 'GET':
-				$this->_metodo = 'obtener';
+				$this->_prefijo = 'obtener';
 				break;
 			case 'POST':
-				$this->_metodo = 'agregar';
+				$this->_prefijo = 'agregar';
 				break;
 			case 'PUT':
-				$this->_metodo = 'actualizar';
+				$this->_prefijo = 'editar';
 				break;
 			case 'DELETE':
-				$this->_metodo = 'borrar';
+				$this->_prefijo = 'borrar';
 				break;
 			default:
-				$this->_metodo = 'obtener';
+				$this->_prefijo = 'obtener';
 				break;
 		}
 
@@ -104,7 +104,7 @@ class Controlador {
 	 * Determina el método que hay que llamar
 	 */
 	function rutearLlamada() {
-		if ((sizeof($this->_parametros) - 2) >= 1 || $this->_metodo === 'agregar' || $this->_metodo === 'actualizar') {
+		if ((sizeof($this->_parametros) - 2) >= 1 || $this->_prefijo === 'agregar' || $this->_prefijo === 'editar') {
 			$hayParametros = TRUE;
 		}
 		// rutear la llamada a su metodo correspondiente
@@ -114,7 +114,7 @@ class Controlador {
 			case 'Categoria':
 			case 'Direccion':
 			case 'Envio':
-			case 'Estado_Subasta':
+			case 'EstadoSubasta':
 			case 'EstadoUsuario':
 			case 'Imagen':
 			case 'Mensaje':
@@ -129,19 +129,47 @@ class Controlador {
 			case 'Tipo_Subasta':
 			case 'Usuario':
 			case 'Usuario_Direccion':
-	        	$nombreMetodo = $this->_metodo . $this->_parametros[1] . $this->complementarNombre();
-	        	echo '$nombreMetodo ' , $nombreMetodo;
-	        	if(method_exists($this->_negocios, $nombreMetodo)) {	        		
+	        	$nombreMetodo = $this->_prefijo . $this->_parametros[1] . $this->complementarNombre();
+// 	        	echo '$nombreMetodo ->-> ' .$nombreMetodo . ' <-<- ';
+	        	if(method_exists($this->_negocios, $nombreMetodo)) {
 	        		$datos = $hayParametros ? $this->_negocios->$nombreMetodo($this->obtenerParametros()) : $this->_negocios->$nombreMetodo();
 	        	} else {
 	        		throw new Exception("Metodo no disponible", 405);
 	        	}
-        		break;		        
+        		break;
+			case 'Articulos':
+			case 'Calificaciones':
+			case 'Categorias':
+			case 'Direcciones':
+			case 'Envios':
+			case 'EstadoSubastas':
+			case 'EstadoUsuarios':
+			case 'Imagenes':
+			case 'Mensajes':
+			case 'Ofertas':
+			case 'Pagos':
+			case 'Roles':
+			case 'Subastas':
+			case 'TarjetaCreditos':
+			case 'TarjetaCreditoUsuarios':
+			case 'TipoEnvios':
+			case 'TipoPagos':
+			case 'TipoSubastas':
+			case 'Usuarios':
+			case 'UsuarioDirecciones':
+				$nombreMetodo = $this->_prefijo . $this->_parametros[1];
+// 				echo '$nombreMetodo ->-> ' .$nombreMetodo . ' <-<- ';
+				if(method_exists($this->_negocios, $nombreMetodo)) {
+					$datos = $this->_negocios->$nombreMetodo();
+				} else {
+					throw new Exception("Metodo no disponible", 405);
+				}				
+			break;	
 		    default:
 		        throw new Exception("URL desconocida", 404);
 		        break;
 		}
-		$this->procesadorDeRespuestas->procesarRespuesta("json",200,"Ok", $datos);
+		$this->procesadorDeRespuestas->procesarRespuesta("json", 200, "Ok", $datos);
 	}
 }
 ?>

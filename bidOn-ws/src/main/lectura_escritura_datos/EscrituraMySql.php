@@ -1,14 +1,30 @@
 <?php
+include_once 'src/main/modelo/Articulo.php';
+include_once 'src/main/modelo/Calificacion.php';
+include_once 'src/main/modelo/Categoria.php';
+include_once 'src/main/modelo/Direccion.php';
+include_once 'src/main/modelo/Envio.php';
+include_once 'src/main/modelo/EstadoSubasta.php';
+include_once 'src/main/modelo/EstadoUsuario.php';
+include_once 'src/main/modelo/Imagen.php';
+include_once 'src/main/modelo/Mensaje.php';
+include_once 'src/main/modelo/Oferta.php';
+include_once 'src/main/modelo/Pago.php';
+include_once 'src/main/modelo/Rol.php';
+include_once 'src/main/modelo/Subasta.php';
+include_once 'src/main/modelo/TarjetaCredito.php';
+include_once 'src/main/modelo/TarjetaCreditoUsuario.php';
+include_once 'src/main/modelo/TipoEnvio.php';
+include_once 'src/main/modelo/TipoPago.php';
+include_once 'src/main/modelo/TipoSubasta.php';
+include_once 'src/main/modelo/Usuario.php';
+include_once 'src/main/modelo/UsuarioDireccion.php';
+
 include_once 'src/main/recursos/Configuracion.php';
 class EscrituraMySql {
 	private $_conn;
 	const NOMBRE_METODO = 'establecer';
 
-	function __construct() {
-		//include all models
-		foreach (glob("src/main/modelo/*.php") as $filename) { include $filename; }	
-	}
-	
 	/**
 	* Inserta un nuevo objeto de una determinada clase
 	* @param unknown $objeto
@@ -16,49 +32,87 @@ class EscrituraMySql {
 	* @return number|string
 	*/
 	function insertar($objeto, $clase) {
-		if (!isset($objeto)) {
-			return 'El objeto recibido no es correcto';
+		$nObjeto = new $clase();
+		$consultaCol = 'INSERT INTO ' . $this->aFormatoDeBD($clase) . ' (';
+		$consultaVal = 'VALUES (';
+		
+		$arr = get_class_methods($clase);
+		$metodosEstablecer = array_filter($arr, function($var){return preg_match('/' . self::NOMBRE_METODO . '/', $var);});
+		$metodosEstablecer = array_values($metodosEstablecer);
+		$parametrosNecesarios = preg_replace('/' . self::NOMBRE_METODO . '/', '', $metodosEstablecer);        
+		$parametrosNecesarios = array_map(function($word) { return lcfirst($word); }, $parametrosNecesarios);
+		foreach ($parametrosNecesarios as $llave => $valor) {
+			if(property_exists($objeto, $valor)) {
+				$consultaCol .= $this->aFormatoDeBD($valor) . ','; 
+				$consultaVal .= "'" . $objeto->{$valor} . "'" . ',';
+				$nObjeto->$metodosEstablecer[$llave]($objeto->{$valor});
+			} else {
+				return 'El objeto recibido no es correcto. La propiedad: ' . $valor . ' no se encuentra.';
+			}
 		}
-	$nObjeto = new $clase();
-	$consultaCol = 'INSERT INTO ' . $clase . ' (';
-	$consultaVal = 'VALUES (';
-	
-	$arr = get_class_methods($clase);
-	$metodosEstablecer = array_filter($arr, function($var){return preg_match('/' . self::NOMBRE_METODO . '/', $var);});
-	$metodosEstablecer = array_values($metodosEstablecer);
-	$parametrosNecesarios = preg_replace('/' . self::NOMBRE_METODO . '/', '', $metodosEstablecer);        
-	$parametrosNecesarios = array_map(function($word) { return lcfirst($word); }, $parametrosNecesarios);
-	foreach ($parametrosNecesarios as $llave => $valor) {
-		if(property_exists($objeto, $valor)) {
-			$consultaCol .= $this->aFormatoDeBD($valor) . ','; 
-			$consultaVal .= "'" . $objeto->{$valor} . "'" . ',';
-			$nObjeto->$metodosEstablecer[$llave]($objeto->{$valor});
-		} else {
-			return 'El objeto recibido no es correcto';
+		$consultaCol = $this->eliminarComaAlFinal($consultaCol) . ') '; //Remover la ultima coma
+		$consultaVal = $this->eliminarComaAlFinal($consultaVal) . ');'; //Remover la ultima coma
+		$consulta = $consultaCol . $consultaVal;
+		
+		$this->abrirConexion();
+		if ($this->_conn->query($consulta) == FALSE) {			
+			$error = $this->_conn->error;
+			$this->cerrarConexion();
+			return 'Error al insertar objeto: ' . $error;
 		}
-	}
-	$consultaCol = $this->eliminarComaAlFinal($consultaCol) . ') '; //Remover la ultima coma
-	$consultaVal = $this->eliminarComaAlFinal($consultaVal) . ');'; //Remover la ultima coma
-	$consulta = $consultaCol . $consultaVal;
-	
-	$this->abrirConexion();
-	if ($this->_conn->query($consulta) == FALSE) {			
-		$error = $this->_conn->error;
 		$this->cerrarConexion();
-		return 'Error al insertar objeto: ' . $error;
-	}
-	$this->cerrarConexion();
-	return json_encode($nObjeto);  
+		return json_encode($nObjeto);  
 	}
 
 	function actualizar($objeto, $clase) {
+		$nObjeto = new $clase();
+		$consultaCol = 'UPDATE ' . $clase . ' SET ';
+		
+		$arr = get_class_methods($clase);
+		$metodosEstablecer = array_filter($arr, function($var){return preg_match('/' . self::NOMBRE_METODO . '/', $var);});
+		$metodosEstablecer = array_values($metodosEstablecer);
+		$parametrosNecesarios = preg_replace('/' . self::NOMBRE_METODO . '/', '', $metodosEstablecer);
+		$parametrosNecesarios = array_map(function($word) { return lcfirst($word); }, $parametrosNecesarios);
+		foreach ($parametrosNecesarios as $llave => $valor) {
+			if(property_exists($objeto, $valor)) {
+				if (strcmp($valor, 'id') != 0) {
+					$consultaCol .= $this->aFormatoDeBD($valor) . ' = ' . $this->obtenerPorTipo($objeto->{$valor}) . ' ,';
+				}
+				$nObjeto->$metodosEstablecer[$llave]($objeto->{$valor});
+			} else {
+				return 'El objeto recibido no es correcto';
+			}
+		}
+		$consultaCol = $this->eliminarComaAlFinal($consultaCol); //Remover la ultima coma
+		$consulta = $consultaCol . ' WHERE id = ' . $objeto->{'id'};
+		$this->abrirConexion();
+		if ($this->_conn->query($consulta) == FALSE) {
+			$error = $this->_conn->error;
+			$this->cerrarConexion();
+			return 'Error al insertar objeto: ' . $error;
+		}
+		$this->cerrarConexion();
+		return json_encode($nObjeto);		
+	}
+	
+	/**
+	 * Devuelve la variable segun su tipo
+	 */
+	private function obtenerPorTipo($variable) {
+		if (is_string($variable)){
+			return '"'.$variable.'"';
+		} else {
+			return $variable;
+		}
 	}
 
 	/**
 	* Elimina la ultima coma al final del string $cadena
 	*/
 	private function eliminarComaAlFinal($cadena) {
-		return preg_replace('/,$/','', $cadena);
+// 		return preg_replace('/,$/','', $cadena);
+// 		return rtrim($cadena, ',');
+		return substr($cadena,0,-1);
 	}
 	
 	/**
@@ -149,64 +203,64 @@ class EscrituraMySql {
 	Actualizar datos
 	**/
 	function actualizarArticulo($articulo) {
-		return $this->actualizar($articulo,Articulo);
+		return $this->actualizar($articulo,'Articulo');
 	}
 	function actualizarCalificacion($calificacion) {
-		return $this->actualizar($calificacion,Calificacion);
+		return $this->actualizar($calificacion,'Calificacion');
 	}
 	function actualizarCategoria($categoria) {
-		return $this->actualizar($categoria,Categoria);
+		return $this->actualizar($categoria,'Categoria');
 	}
 	function actualizarDireccion($direccion) {
-		return $this->actualizar($direccion,Direccion);
+		return $this->actualizar($direccion,'Direccion');
 	}
 	function actualizarEnvio($envio) {
-		return $this->actualizar($envio,Envio);
+		return $this->actualizar($envio,'Envio');
 	}
 	function actualizarEstadoSubasta($estadoSubasta) {
-		return $this->actualizar($estadoSubasta,EstadoSubasta);
+		return $this->actualizar($estadoSubasta,'EstadoSubasta');
 	}
 	function actualizarEstadoUsuario($estadoUsuario) {
-		return $this->actualizar($estadoUsuario,EstadoUsuario);
+		return $this->actualizar($estadoUsuario,'EstadoUsuario');
 	}
 	function actualizarImagen($imagen) {
-		return $this->actualizar($imagen,Imagen);
+		return $this->actualizar($imagen,'Imagen');
 	}
 	function actualizarMensaje($mensaje) {
-		return $this->actualizar($mensaje,Mensaje);
+		return $this->actualizar($mensaje,'Mensaje');
 	}
 	function actualizarOferta($oferta) {
-		return $this->actualizar($oferta,Oferta);
+		return $this->actualizar($oferta,'Oferta');
 	}
 	function actualizarPago($pago) {
-		return $this->actualizar($pago,Pago);
+		return $this->actualizar($pago,'Pago');
 	}
 	function actualizarRol($rol) {
-		return $this->actualizar($rol,Rol);
+		return $this->actualizar($rol,'Rol');
 	}
 	function actualizarSubasta($subasta) {
-		return $this->actualizar($subasta,Subasta);
+		return $this->actualizar($subasta,'Subasta');
 	}
 	function actualizarTarjetaCredito($tarjetaCredito) {
-		return $this->actualizar($tarjetaCredito,TarjetaCredito);
+		return $this->actualizar($tarjetaCredito,'TarjetaCredito');
 	}
 	function actualizarTarjetaCreditoUsuario($tarjetaCreditoUsuario) {
-		return $this->actualizar($tarjetaCreditoUsuario,TarjetaCreditoUsuario);
+		return $this->actualizar($tarjetaCreditoUsuario,'TarjetaCreditoUsuario');
 	}
 	function actualizarTipoEnvio($tipoEnvio) {
-		return $this->actualizar($tipoEnvio,TipoEnvio);
+		return $this->actualizar($tipoEnvio,'TipoEnvio');
 	}
 	function actualizarTipoPago($tipoPago) {
-		return $this->actualizar($tipoPago,TipoPago);
+		return $this->actualizar($tipoPago,'TipoPago');
 	}
 	function actualizarTipoSubasta($tipoSubasta) {
-		return $this->actualizar($tipoSubasta,TipoSubasta);
+		return $this->actualizar($tipoSubasta,'TipoSubasta');
 	}
 	function actualizarUsuario($usuario) {
-		return $this->actualizar($usuario,Usuario);
+		return $this->actualizar($usuario,'Usuario');
 	}
 	function actualizarUsuarioDireccion($usuarioDireccion) {
-		return $this->actualizar($usuarioDireccion,UsuarioDireccion);
+		return $this->actualizar($usuarioDireccion,'UsuarioDireccion');
 	}
 
 }

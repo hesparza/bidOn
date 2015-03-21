@@ -28,10 +28,10 @@ class Negocios {
 		return $this->_recuperacionDeDatos->leerEnvios();
 	}
 	function obtenerEstadoSubastas() {
-		return $this->_recuperacionDeDatos->leerEstado_Subastas();
+		return $this->_recuperacionDeDatos->leerEstadoSubastas();
 	}
 	function obtenerEstadoUsuarios() {
-		return $this->_recuperacionDeDatos->leerEstado_Usuarios();
+		return $this->_recuperacionDeDatos->leerEstadoUsuarios();
 	}
 	function obtenerImagenes() {
 		return $this->_recuperacionDeDatos->leerImagenes();
@@ -52,25 +52,25 @@ class Negocios {
 		return $this->_recuperacionDeDatos->leerSubastas();
 	}
 	function obtenerTarjetaCreditos() {
-		return $this->_recuperacionDeDatos->leerTarjeta_Creditos();
+		return $this->_recuperacionDeDatos->leerTarjetaCreditos();
 	}
 	function obtenerTarjetaCreditoUsuarios() {
-		return $this->_recuperacionDeDatos->leerTarjeta_Credito_Usuarios();
+		return $this->_recuperacionDeDatos->leerTarjetaCreditoUsuarios();
 	}
 	function obtenerTipoEnvios() {
-		return $this->_recuperacionDeDatos->leerTipo_Envios();
+		return $this->_recuperacionDeDatos->leerTipoEnvios();
 	}
 	function obtenerTipoPagos() {
-		return $this->_recuperacionDeDatos->leerTipo_Pagos();
+		return $this->_recuperacionDeDatos->leerTipoPagos();
 	}
 	function obtenerTipoSubastas() {
-		return $this->_recuperacionDeDatos->leerTipo_Subastas();
+		return $this->_recuperacionDeDatos->leerTipoSubastas();
 	}
 	function obtenerUsuarios() {
 		return $this->_recuperacionDeDatos->leerUsuarios();
 	}
 	function obtenerUsuarioDirecciones() {
-		return $this->_recuperacionDeDatos->leerUsuario_Direcciones();
+		return $this->_recuperacionDeDatos->leerUsuarioDirecciones();
 	}
 
 

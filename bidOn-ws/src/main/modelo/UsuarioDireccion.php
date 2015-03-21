@@ -1,5 +1,5 @@
 <?php
-class Usuario_Direccion {
+class UsuarioDireccion {
 	var $usuarioId;
 	var $direccionId;
 

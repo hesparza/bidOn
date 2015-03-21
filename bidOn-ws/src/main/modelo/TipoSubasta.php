@@ -1,5 +1,5 @@
 <?php
-class Tipo_Subasta {
+class TipoSubasta {
 	var $id;
 	var $nombre;
 	var $descripcion;

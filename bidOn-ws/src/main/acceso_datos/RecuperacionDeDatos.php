@@ -26,10 +26,10 @@ class RecuperacionDeDatos {
 		return $this->_lecturaMySql->seleccionarEnvios();
 	}
 	function leerEstadoSubastas() {
-		return $this->_lecturaMySql->seleccionarEstado_Subastas();
+		return $this->_lecturaMySql->seleccionarEstadoSubastas();
 	}
 	function leerEstadoUsuarios() {
-		return $this->_lecturaMySql->seleccionarEstado_Usuarios();
+		return $this->_lecturaMySql->seleccionarEstadoUsuarios();
 	}
 	function leerImagenes() {
 		return $this->_lecturaMySql->seleccionarImagenes();
@@ -50,25 +50,25 @@ class RecuperacionDeDatos {
 		return $this->_lecturaMySql->seleccionarSubastas();
 	}
 	function leerTarjetaCreditos() {
-		return $this->_lecturaMySql->seleccionarTarjeta_Creditos();
+		return $this->_lecturaMySql->seleccionarTarjetaCreditos();
 	}
 	function leerTarjetaCreditoUsuarios() {
-		return $this->_lecturaMySql->seleccionarTarjeta_Credito_Usuarios();
+		return $this->_lecturaMySql->seleccionarTarjetaCreditoUsuarios();
 	}
 	function leerTipoEnvios() {
-		return $this->_lecturaMySql->seleccionarTipo_Envios();
+		return $this->_lecturaMySql->seleccionarTipoEnvios();
 	}
 	function leerTipoPagos() {
-		return $this->_lecturaMySql->seleccionarTipo_Pagos();
+		return $this->_lecturaMySql->seleccionarTipoPagos();
 	}
 	function leerTipoSubastas() {
-		return $this->_lecturaMySql->seleccionarTipo_Subastas();
+		return $this->_lecturaMySql->seleccionarTipoSubastas();
 	}
 	function leerUsuarios() {
 		return $this->_lecturaMySql->seleccionarUsuarios();
 	}
 	function leerUsuarioDirecciones() {
-		return $this->_lecturaMySql->seleccionarUsuario_Direcciones();
+		return $this->_lecturaMySql->seleccionarUsuarioDirecciones();
 	}
 
 

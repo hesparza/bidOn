@@ -1,5 +1,5 @@
 <?php
-class Tipo_Envio {
+class TipoEnvio {
 	var $id;
 	var $nombre;
 	var $descripcion;

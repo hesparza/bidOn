@@ -1,5 +1,5 @@
 <?php
-class Tipo_Pago {
+class TipoPago {
 	var $id;
 	var $nombre;
 	var $descripcion;

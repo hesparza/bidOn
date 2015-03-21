@@ -1,5 +1,5 @@
 <?php
-class Estado_Usuario {
+class EstadoUsuario {
 	var $id;
 	var $nombre;
 	var $descripcion;

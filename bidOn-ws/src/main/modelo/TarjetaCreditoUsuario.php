@@ -1,5 +1,5 @@
 <?php
-class Tarjeta_Credito_Usuario {
+class TarjetaCreditoUsuario {
 	var $tarjetaCreditoId;
 	var $usuarioId;
 
