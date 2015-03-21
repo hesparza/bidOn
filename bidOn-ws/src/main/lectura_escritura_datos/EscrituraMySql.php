@@ -64,9 +64,15 @@ class EscrituraMySql {
 		return json_encode($nObjeto);  
 	}
 
+	/**
+	 * Actualizar una tupla de la base de datos a partir de un objeto
+	 * @param unknown $objeto
+	 * @param unknown $clase
+	 * @return number|string
+	 */
 	function actualizar($objeto, $clase) {
 		$nObjeto = new $clase();
-		$consultaCol = 'UPDATE ' . $clase . ' SET ';
+		$consultaCol = 'UPDATE ' . $this->aFormatoDeBD($clase) . ' SET ';
 		
 		$arr = get_class_methods($clase);
 		$metodosEstablecer = array_filter($arr, function($var){return preg_match('/' . self::NOMBRE_METODO . '/', $var);});
@@ -80,7 +86,7 @@ class EscrituraMySql {
 				}
 				$nObjeto->$metodosEstablecer[$llave]($objeto->{$valor});
 			} else {
-				return 'El objeto recibido no es correcto';
+				return 'El objeto recibido no es correcto. La propiedad: ' . $valor . ' no se encuentra.';
 			}
 		}
 		$consultaCol = $this->eliminarComaAlFinal($consultaCol); //Remover la ultima coma
@@ -89,10 +95,36 @@ class EscrituraMySql {
 		if ($this->_conn->query($consulta) == FALSE) {
 			$error = $this->_conn->error;
 			$this->cerrarConexion();
-			return 'Error al insertar objeto: ' . $error;
+			return 'Error al actualizar objeto: ' . $error;
 		}
 		$this->cerrarConexion();
 		return json_encode($nObjeto);		
+	}
+	
+	function borrar($objeto, $clase) {
+		$consulta = 'DELETE FROM ' . $this->aFormatoDeBD($clase) . ' WHERE id=';
+		
+		if(property_exists($objeto, 'id')) {
+			$consulta .= $objeto->{'id'};
+		} 
+		else {
+			return 'El objeto recibido no es correcto. No se encuentra la propiedad id.';
+		}
+		
+		$this->abrirConexion();		
+		//Hay almenos una tupla que se puede eliminar?
+		$resultado = $this->_conn->query('SELECT * FROM ' . $this->aFormatoDeBD($clase) . ' WHERE id='. $objeto->{'id'});		
+		if ($resultado->num_rows < 1) {
+			$this->cerrarConexion();
+			return 'No se encontraron objetos a eliminar';
+		}
+		if ($this->_conn->query($consulta) == FALSE) {
+			$error = $this->_conn->error;
+			$this->cerrarConexion();
+			return 'Error al eliminar objeto: ' . $error;
+		}
+		$this->cerrarConexion();
+		return "Ok";
 	}
 	
 	/**
@@ -261,6 +293,71 @@ class EscrituraMySql {
 	}
 	function actualizarUsuarioDireccion($usuarioDireccion) {
 		return $this->actualizar($usuarioDireccion,'UsuarioDireccion');
+	}
+
+
+	/**
+	Borrar datos
+	**/
+	function borrarArticulo($articulo) {
+		return $this->borrar($articulo,'Articulo');
+	}
+	function borrarCalificacion($calificacion) {
+		return $this->borrar($calificacion,'Calificacion');
+	}
+	function borrarCategoria($categoria) {
+		return $this->borrar($categoria,'Categoria');
+	}
+	function borrarDireccion($direccion) {
+		return $this->borrar($direccion,'Direccion');
+	}
+	function borrarEnvio($envio) {
+		return $this->borrar($envio,'Envio');
+	}
+	function borrarEstadoSubasta($estadoSubasta) {
+		return $this->borrar($estadoSubasta,'EstadoSubasta');
+	}
+	function borrarEstadoUsuario($estadoUsuario) {
+		return $this->borrar($estadoUsuario,'EstadoUsuario');
+	}
+	function borrarImagen($imagen) {
+		return $this->borrar($imagen,'Imagen');
+	}
+	function borrarMensaje($mensaje) {
+		return $this->borrar($mensaje,'Mensaje');
+	}
+	function borrarOferta($oferta) {
+		return $this->borrar($oferta,'Oferta');
+	}
+	function borrarPago($pago) {
+		return $this->borrar($pago,'Pago');
+	}
+	function borrarRol($rol) {
+		return $this->borrar($rol,'Rol');
+	}
+	function borrarSubasta($subasta) {
+		return $this->borrar($subasta,'Subasta');
+	}
+	function borrarTarjetaCredito($tarjetaCredito) {
+		return $this->borrar($tarjetaCredito,'TarjetaCredito');
+	}
+	function borrarTarjetaCreditoUsuario($tarjetaCreditoUsuario) {
+		return $this->borrar($tarjetaCreditoUsuario,'TarjetaCreditoUsuario');
+	}
+	function borrarTipoEnvio($tipoEnvio) {
+		return $this->borrar($tipoEnvio,'TipoEnvio');
+	}
+	function borrarTipoPago($tipoPago) {
+		return $this->borrar($tipoPago,'TipoPago');
+	}
+	function borrarTipoSubasta($tipoSubasta) {
+		return $this->borrar($tipoSubasta,'TipoSubasta');
+	}
+	function borrarUsuario($usuario) {
+		return $this->borrar($usuario,'Usuario');
+	}
+	function borrarUsuarioDireccion($usuarioDireccion) {
+		return $this->borrar($usuarioDireccion,'UsuarioDireccion');
 	}
 
 }

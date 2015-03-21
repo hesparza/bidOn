@@ -104,7 +104,7 @@ class Controlador {
 	 * Determina el método que hay que llamar
 	 */
 	function rutearLlamada() {
-		if ((sizeof($this->_parametros) - 2) >= 1 || $this->_prefijo === 'agregar' || $this->_prefijo === 'editar') {
+		if ((sizeof($this->_parametros) - 2) >= 1 || $this->_prefijo === 'agregar' || $this->_prefijo === 'editar' || $this->_prefijo === 'remover') {
 			$hayParametros = TRUE;
 		}
 		// rutear la llamada a su metodo correspondiente
@@ -130,7 +130,7 @@ class Controlador {
 			case 'Usuario':
 			case 'Usuario_Direccion':
 	        	$nombreMetodo = $this->_prefijo . $this->_parametros[1] . $this->complementarNombre();
-	        	echo '$nombreMetodo ->-> ' .$nombreMetodo . ' <-<- ';
+// 	        	echo '$nombreMetodo ->-> ' .$nombreMetodo . ' <-<- ';
 	        	if(method_exists($this->_negocios, $nombreMetodo)) {
 	        		$datos = $hayParametros ? $this->_negocios->$nombreMetodo($this->obtenerParametros()) : $this->_negocios->$nombreMetodo();
 	        	} else {

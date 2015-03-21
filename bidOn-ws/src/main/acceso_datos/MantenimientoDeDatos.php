@@ -136,5 +136,70 @@ class MantenimientoDeDatos {
 		return $this->_escrituraMySql->actualizarUsuarioDireccion($usuarioDireccion);
 	}
 
+
+	/**
+	Eliminar datos
+	**/
+	function eliminarArticulo($articulo) {
+		return $this->_escrituraMySql->borrarArticulo($articulo);
+	}
+	function eliminarCalificacion($calificacion) {
+		return $this->_escrituraMySql->borrarCalificacion($calificacion);
+	}
+	function eliminarCategoria($categoria) {
+		return $this->_escrituraMySql->borrarCategoria($categoria);
+	}
+	function eliminarDireccion($direccion) {
+		return $this->_escrituraMySql->borrarDireccion($direccion);
+	}
+	function eliminarEnvio($envio) {
+		return $this->_escrituraMySql->borrarEnvio($envio);
+	}
+	function eliminarEstadoSubasta($estadoSubasta) {
+		return $this->_escrituraMySql->borrarEstadoSubasta($estadoSubasta);
+	}
+	function eliminarEstadoUsuario($estadoUsuario) {
+		return $this->_escrituraMySql->borrarEstadoUsuario($estadoUsuario);
+	}
+	function eliminarImagen($imagen) {
+		return $this->_escrituraMySql->borrarImagen($imagen);
+	}
+	function eliminarMensaje($mensaje) {
+		return $this->_escrituraMySql->borrarMensaje($mensaje);
+	}
+	function eliminarOferta($oferta) {
+		return $this->_escrituraMySql->borrarOferta($oferta);
+	}
+	function eliminarPago($pago) {
+		return $this->_escrituraMySql->borrarPago($pago);
+	}
+	function eliminarRol($rol) {
+		return $this->_escrituraMySql->borrarRol($rol);
+	}
+	function eliminarSubasta($subasta) {
+		return $this->_escrituraMySql->borrarSubasta($subasta);
+	}
+	function eliminarTarjetaCredito($tarjetaCredito) {
+		return $this->_escrituraMySql->borrarTarjetaCredito($tarjetaCredito);
+	}
+	function eliminarTarjetaCreditoUsuario($tarjetaCreditoUsuario) {
+		return $this->_escrituraMySql->borrarTarjetaCreditoUsuario($tarjetaCreditoUsuario);
+	}
+	function eliminarTipoEnvio($tipoEnvio) {
+		return $this->_escrituraMySql->borrarTipoEnvio($tipoEnvio);
+	}
+	function eliminarTipoPago($tipoPago) {
+		return $this->_escrituraMySql->borrarTipoPago($tipoPago);
+	}
+	function eliminarTipoSubasta($tipoSubasta) {
+		return $this->_escrituraMySql->borrarTipoSubasta($tipoSubasta);
+	}
+	function eliminarUsuario($usuario) {
+		return $this->_escrituraMySql->borrarUsuario($usuario);
+	}
+	function eliminarUsuarioDireccion($usuarioDireccion) {
+		return $this->_escrituraMySql->borrarUsuarioDireccion($usuarioDireccion);
+	}
+
 }
 ?>

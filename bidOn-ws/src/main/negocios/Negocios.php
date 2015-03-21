@@ -346,5 +346,70 @@ class Negocios {
 		return $this->_mantenimientoDeDatos->modificarUsuarioDireccion($usuarioDireccion);
 	}
 
+
+	/**
+	Remover datos
+	**/
+	function removerArticulo($articulo) {
+		return $this->_mantenimientoDeDatos->eliminarArticulo($articulo);
+	}
+	function removerCalificacion($calificacion) {
+		return $this->_mantenimientoDeDatos->eliminarCalificacion($calificacion);
+	}
+	function removerCategoria($categoria) {
+		return $this->_mantenimientoDeDatos->eliminarCategoria($categoria);
+	}
+	function removerDireccion($direccion) {
+		return $this->_mantenimientoDeDatos->eliminarDireccion($direccion);
+	}
+	function removerEnvio($envio) {
+		return $this->_mantenimientoDeDatos->eliminarEnvio($envio);
+	}
+	function removerEstadoSubasta($estadoSubasta) {
+		return $this->_mantenimientoDeDatos->eliminarEstadoSubasta($estadoSubasta);
+	}
+	function removerEstadoUsuario($estadoUsuario) {
+		return $this->_mantenimientoDeDatos->eliminarEstadoUsuario($estadoUsuario);
+	}
+	function removerImagen($imagen) {
+		return $this->_mantenimientoDeDatos->eliminarImagen($imagen);
+	}
+	function removerMensaje($mensaje) {
+		return $this->_mantenimientoDeDatos->eliminarMensaje($mensaje);
+	}
+	function removerOferta($oferta) {
+		return $this->_mantenimientoDeDatos->eliminarOferta($oferta);
+	}
+	function removerPago($pago) {
+		return $this->_mantenimientoDeDatos->eliminarPago($pago);
+	}
+	function removerRol($rol) {
+		return $this->_mantenimientoDeDatos->eliminarRol($rol);
+	}
+	function removerSubasta($subasta) {
+		return $this->_mantenimientoDeDatos->eliminarSubasta($subasta);
+	}
+	function removerTarjetaCredito($tarjetaCredito) {
+		return $this->_mantenimientoDeDatos->eliminarTarjetaCredito($tarjetaCredito);
+	}
+	function removerTarjetaCreditoUsuario($tarjetaCreditoUsuario) {
+		return $this->_mantenimientoDeDatos->eliminarTarjetaCreditoUsuario($tarjetaCreditoUsuario);
+	}
+	function removerTipoEnvio($tipoEnvio) {
+		return $this->_mantenimientoDeDatos->eliminarTipoEnvio($tipoEnvio);
+	}
+	function removerTipoPago($tipoPago) {
+		return $this->_mantenimientoDeDatos->eliminarTipoPago($tipoPago);
+	}
+	function removerTipoSubasta($tipoSubasta) {
+		return $this->_mantenimientoDeDatos->eliminarTipoSubasta($tipoSubasta);
+	}
+	function removerUsuario($usuario) {
+		return $this->_mantenimientoDeDatos->eliminarUsuario($usuario);
+	}
+	function removerUsuarioDireccion($usuarioDireccion) {
+		return $this->_mantenimientoDeDatos->eliminarUsuarioDireccion($usuarioDireccion);
+	}
+
 }
 ?>
