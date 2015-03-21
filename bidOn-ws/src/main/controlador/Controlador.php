@@ -26,7 +26,7 @@ class Controlador {
 				$this->_prefijo = 'editar';
 				break;
 			case 'DELETE':
-				$this->_prefijo = 'borrar';
+				$this->_prefijo = 'remover';
 				break;
 			default:
 				$this->_prefijo = 'obtener';
@@ -130,7 +130,7 @@ class Controlador {
 			case 'Usuario':
 			case 'Usuario_Direccion':
 	        	$nombreMetodo = $this->_prefijo . $this->_parametros[1] . $this->complementarNombre();
-// 	        	echo '$nombreMetodo ->-> ' .$nombreMetodo . ' <-<- ';
+	        	echo '$nombreMetodo ->-> ' .$nombreMetodo . ' <-<- ';
 	        	if(method_exists($this->_negocios, $nombreMetodo)) {
 	        		$datos = $hayParametros ? $this->_negocios->$nombreMetodo($this->obtenerParametros()) : $this->_negocios->$nombreMetodo();
 	        	} else {

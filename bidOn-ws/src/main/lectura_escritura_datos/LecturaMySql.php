@@ -27,7 +27,6 @@ class LecturaMySql {
     const NOMBRE_METODO = 'establecer';
     
     function seleccionar($objeto, $clase) {
-        $nObjeto = new $clase();
         $consultaCol = 'SELECT ';
         $consultaVal = '';
         
@@ -43,7 +42,7 @@ class LecturaMySql {
 					{
 		                $consultaCol .= $this->aFormatoDeBD($valor) . ','; 
 		                $consultaVal .= "'" . $objeto->{$valor} . "'" . ',';
-		                $nObjeto->$metodosEstablecer[$llave]($objeto->{$valor});
+// 		                $nObjeto->$metodosEstablecer[$llave]($objeto->{$valor});
 					} else {
 		                return 'El objeto recibido no es correcto';
 		            }		            
@@ -54,7 +53,7 @@ class LecturaMySql {
             } else {
             	foreach ($parametrosNecesarios as $llave => $valor) {
 	            	$consultaCol .= $this->aFormatoDeBD($valor) . ',';
-	            	$nObjeto->$metodosEstablecer[$llave]($objeto->{$valor});            	
+// 	            	$nObjeto->$metodosEstablecer[$llave]($objeto->{$valor});            	
             	}
             	$consultaCol = $this->eliminarComaAlFinal($consultaCol); //Remover la ultima coma
             	$consulta = $consultaCol . ' FROM ' . $this->aFormatoDeBD($clase) . ';';
@@ -68,6 +67,7 @@ class LecturaMySql {
 			}
 // 			printf (" \n");
 			$i = 0;
+			$nObjeto = new $clase();
 			while ($tupla = $resultado->fetch_array(MYSQLI_ASSOC)) {
 				foreach ($parametrosNecesarios as $llave => $valor) {					
 // 					printf (" | %s  (%d)| ", $tupla[$this->aFormatoDeBD($valor)], $arrColumnaTipo[$i]);
@@ -75,6 +75,7 @@ class LecturaMySql {
 						case 3:
 							settype($tupla[$this->aFormatoDeBD($valor)], 'int');
 							$nObjeto->$valor = $tupla[$this->aFormatoDeBD($valor)];
+							break;
 						case 5:
 							settype($tupla[$this->aFormatoDeBD($valor)], 'float');
 							$nObjeto->$valor = $tupla[$this->aFormatoDeBD($valor)];
@@ -85,12 +86,13 @@ class LecturaMySql {
 					}
 					
 					$i++;
-				}			
+				}
 				$i = 0;				
 // 				printf (" \n");
 				$objResultado[] = $nObjeto;
+				$nObjeto = new $clase();
 			}
-			print_r($objResultado);
+// 			print_r($objResultado);
 		} else {
 			$error = $this->_conn->error;
 			$this->cerrarConexion();
