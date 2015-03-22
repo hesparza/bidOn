@@ -126,6 +126,12 @@ ul li {
 	margin: 0px auto;
 	overflow: hidden;
 }
+.content#userZone {
+	background: url(../img/advisor.png) no-repeat left bottom;
+}
+.content#userZone  h2 {
+	margin-left: 300px;
+}
 .header {
 	width: 960px;
 	height: 80px;
@@ -156,7 +162,7 @@ ul li {
 }
 .content, .footer {
 	width: 930px;
-	padding: 30px;
+	padding: 30px 15px;
 }
 .copyright {
 	padding: 10px;
@@ -196,7 +202,11 @@ p {
 	overflow: hidden;
 	padding: 10px 0px;
 }
-.destacadas li {
+.ingreso {
+	overflow: hidden;
+	padding: 10px 0px 10px 300px;
+}
+.destacadas li, .ingreso li {
 	float: left;
 	width: 278px;
 	margin-right: 15px;
@@ -206,6 +216,104 @@ p {
 	margin-bottom: 15px;
 	text-align: center;
 }
+.ingreso li {
+	text-align: left;
+	min-height: 300px;
+}
+.ingreso li.short {
+	background: none;
+	border: none;
+	padding: 10px 0px;
+}
+
+.ingreso p {
+	padding: 10px 0px;
+	margin: 0px;
+}
+.ingreso label, .comentarios label {
+	display: block;
+	padding: 10px 0px;
+	font-size: 14px;
+	font-weight: bold;
+}
+.ingreso label.remember {
+	font-weight: normal !important;
+	display: inline-block;
+}
+.ingreso a {
+	display: inline-block;
+	color: #326598;
+	margin-top: 15px;
+	font-size: 13px;
+	float: right;
+}
+.ingreso a:hover {
+	text-decoration: none;
+}
+.ingreso input[type="text"], .ingreso input[type="password"], .comentarios input[type="text"], .comentarios input[type="password"] {
+	clear: both;
+	display: block;
+	margin-top: 5px;
+	width: 276px;
+	height: 30px;
+	background: #EBEBEB;
+	border: 1px solid #CCC;
+	outline: none;
+}
+.ingreso input[type="submit"], .comentarios input[type="submit"], .comentarios input[type="reset"] {
+	clear: both;
+	display: block;
+	position: relative;
+	width: 278px;
+	height: 35px;
+	margin-top: 35px;
+	background: #FF9900;
+	border: none;
+	outline: none;
+	color: #FFFFFF;
+	cursor: pointer;
+}
+.ingreso input[type="submit"]:hover, .comentarios input[type="submit"]:hover {
+	background: #FF6600;
+}
+.comentarios select {
+	clear: both;
+	display: block;
+	margin-top: 5px;
+	width: 276px;
+	height: 34px;
+	background: #EBEBEB;
+	border: 1px solid #CCC;
+	outline: none;
+}
+.ingreso input[type="submit"]#newaccount {
+	margin-top: 94px;
+	background: #326598;
+}
+.comentarios input[type="reset"] {
+	margin-top: 35px;
+	background: #326598;
+}
+.ingreso input[type="submit"]#newaccount:hover, .comentarios input[type="reset"]:hover {
+	background: #003366;
+}
+.comentarios table.userslist {
+	table-layout: auto;
+}
+.comentarios table.userslist th, .comentarios table.userslist td {
+	border-bottom: 1px #CCC solid;
+	text-align: left;
+}
+.comentarios table.userslist tr:last-child td {
+	border-bottom: none;
+}
+.comentarios table.userslist a {
+	color:#FF6600;
+	text-decoration: underline;
+	}
+.comentarios table.userslist a:hover {
+	text-decoration: none;
+	}
 .activas li {
 	float: left;
 	width: 203px;
@@ -237,7 +345,20 @@ p {
 	margin-left: 230px;
 }
 .comentarios .info textarea {
+	margin-top: 5px;
 	width: 635px;
+	background: #EBEBEB;
+	border: 1px solid #CCC;
+	outline: none;
+}
+.ingreso textarea {
+	clear: both;
+	display: block;
+	margin-top: 5px;
+	width: 272px;
+	background: #EBEBEB;
+	border: 1px solid #CCC;
+	outline: none;
 }
 .comentarios .info .buttons {
 	text-align: right;
@@ -256,10 +377,10 @@ p {
 }
 .comentarios .info input[type="submit"] {
 	background-color: #FF6600;
-}.comentarios .info input[type="reset"] {
+}
+.comentarios .info input[type="reset"] {
 	background-color: #999999;
 }
-
 .user .username, .item .itemname, .item .itemimages  {
 	font-size: 11px;
 	color: #666;
