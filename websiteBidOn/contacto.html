@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <!-- SlidesJS Required (if responsive): Sets the page width to the device width. -->
@@ -13,16 +13,16 @@
   <div class="wrapper-header">
     <div class="header"> <a href="#"><img src="img/logoBidOn.png" hspace="15" vspace="10" border="0" /></a>
       <ul class="mainmenu">
-        <li><a href="#">Inicio</a></li>
+        <li><a href="index.html">Inicio</a></li>
         <li><a href="#">Categoría</a></li>
         <li><a href="#">Producto</a></li>
-        <li><a href="#">Opiniones</a></li>
+        <li><a href="opiniones.html">Opiniones</a></li>
         <li><a href="#">Contacto</a></li>
       </ul>
       <ul class="submainmenu">
         <li><a href="#">Carrito</a></li>
         <li><a href="#">Ingresar</a></li>
-        <li><a href="#">Salir</a></li>
+        <li><a href="index.html">Salir</a></li>
       </ul>
     </div>
   </div>
@@ -65,11 +65,11 @@
           <h3>Estamos aquí para ayudarlo</h3>
           <form name="form1" method="post" action="">
             <label>Correo electrónico
-            <input type="text" name="email" id="email"></label>
+            <input type="email" name="email" id="email" required></label>
             <label>Asunto
-            <input type="text" name="subject" id="subject"></label>
+            <input type="text" name="subject" id="subject" required></label>
             <label>Mensaje
-            <textarea name="opinion" cols="" rows="8"></textarea>
+            <textarea name="opinion" cols="" rows="8" required></textarea>
             <input type="submit" name="login" id="login" value="Enviar">
           </form>
         </li>
