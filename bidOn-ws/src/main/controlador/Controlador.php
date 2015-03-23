@@ -35,22 +35,8 @@ class Controlador {
 
 		$this->_parametros = $parametros;		
 		$this->procesadorDeRespuestas = new ProcesadorDeRespuestas();
-
-// 		$lambda = 		function ($e) use ($_formato) {
-// 			http_response_code($e->getCode());
-// 			$this->procesadorDeRespuestas->procesarRespuesta( $this->_formato, $e->getCode(), $e->getMessage(), '');
-// 		}
 		
-// 		set_exception_handler($lambda);
-		
-		//Se registra una funcion para manejar errores en la aplicacion
 		register_shutdown_function( "manejador_de_errores" );
-		
-// 		$lambda = function($exception) use ($var) {
-// 			$this->callback($exception,$var);
-// 		}
-		
-// 		set_exception_handler($lambda);
 
 		$this->_negocios =  new Negocios();
 	}		
