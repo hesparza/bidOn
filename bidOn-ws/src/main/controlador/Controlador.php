@@ -1,5 +1,5 @@
 <?php
-include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/controlador/procesadorDeRespuestas.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/controlador/ProcesadorDeRespuestas.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/negocios/Negocios.php';
 class Controlador {	
 	private $_formato;
