@@ -11,51 +11,9 @@
 </head>
 <body>
 <div class="wrapper-container">
-  <div class="wrapper-header">
-    <div class="header">
-    <a href="#"><img src="img/logoBidOn.png" hspace="15" vspace="10" border="0" /></a>
-      <ul class="mainmenu">
-        <li><a href="#">Inicio</a></li>
-        <li><a href="#">Categoría</a></li>
-        <li><a href="#">Producto</a></li>
-        <li><a href="#">Opiniones</a></li>
-        <li><a href="#">Contacto</a></li>
-      </ul>
-      <ul class="submainmenu">
-        <li><a href="#">Carrito</a></li>
-        <li><a href="#">Ingresar</a></li>
-        <li><a href="#">Salir</a></li>
-      </ul>
-    </div>    
-  </div>
+  <?php include_once $_SERVER['DOCUMENT_ROOT'] . '/websiteBidOn/encabezado.php'; ?>  
   <div class="wrapper-content">  
-    <div class="wrapper-slides">
-    
-          <!-- SlidesJS Required: Start Slides -->
-      <!-- The container is used to define the width of the slideshow -->
-      <div class="container">
-        <div id="slides"> <img src="img/slide1.jpg" alt="Subasta 1"> <img src="img/slide2.jpg" alt="Subasta 2"> <img src="img/slide3.jpg" alt="Subasta 3"> <img src="img/slide4.jpg" alt="Subasta 4"> <a href="#" class="slidesjs-previous slidesjs-navigation"><i class="icon-chevron-left icon-large"></i></a> <a href="#" class="slidesjs-next slidesjs-navigation"><i class="icon-chevron-right icon-large"></i></a> </div>
-      </div>
-      <!-- End SlidesJS Required: Start Slides -->
-      <!-- SlidesJS Required: Link to jQuery -->
-      <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-      <!-- End SlidesJS Required -->
-      <!-- SlidesJS Required: Link to jquery.slides.js -->
-      <script src="js/jquery.slides.min.js"></script>
-      <!-- End SlidesJS Required -->
-      <!-- SlidesJS Required: Initialize SlidesJS with a jQuery doc ready -->
-      <script>
-    $(function() {
-      $('#slides').slidesjs({
-        width: 960,
-        height: 320,
-        navigation: false
-      });
-    });
-  </script>
-      <!-- End SlidesJS Required -->
-     <div class="searchbox"><input name="search" type="text" value="Buscar..." size="50" maxlength="50" /></div>
-    </div>
+    <?php include_once $_SERVER['DOCUMENT_ROOT'] . '/websiteBidOn/carrusel.php'; ?>
         <div class="content">
           <h2>Administración de usuarios</h2>
           <div class="comentarios">
@@ -147,11 +105,7 @@
 </div>
     </div>
   </div>
-  <div class="wrapper-footer">
-    <div class="footer">
-    </div>
-    <div class="copyright"><p>Derechos Reservados 2015 - BidOn - Portal Social de Subastas en Línea</p></div>
-  </div>
+  <?php include_once $_SERVER['DOCUMENT_ROOT'] . '/websiteBidOn/pie.php'; ?>
 </div>
 </body>
 </html>

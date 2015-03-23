@@ -132,6 +132,9 @@ ul li {
 .content#userZone  h2 {
 	margin-left: 300px;
 }
+.content#login  h2 {
+	margin-left: 300px;
+}
 .header {
 	width: 960px;
 	height: 80px;

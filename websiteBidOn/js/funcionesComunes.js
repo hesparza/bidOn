@@ -15,4 +15,14 @@ var FuncionesComunes = function(){
 		});	
 		return true;
 	};
+	
+	this.hayCamposVacios = function(arr) {
+		var r = false;
+		arr.forEach(function(value) {
+			if (isEmpty(value)) {
+				r = true;
+			}
+		});
+		return r;
+	}
 }

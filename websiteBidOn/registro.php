@@ -13,31 +13,9 @@
 <script type="text/javascript" src="js/registro.js"></script>
 </head><body>
 <div class="wrapper-container">
-  <div class="wrapper-header">
-    <div class="header"> <a href="#"><img src="img/logoBidOn.png" hspace="15" vspace="10" border="0" /></a>
-      <ul class="mainmenu">
-        <li><a href="index.html">Inicio</a></li>
-        <li><a href="#">Categoría</a></li>
-        <li><a href="#">Producto</a></li>
-        <li><a href="opiniones.html">Opiniones</a></li>
-        <li><a href="contacto.html">Contacto</a></li>
-      </ul>
-      <ul class="submainmenu">
-        <li><a href="#">Carrito</a></li>
-        <li><a href="#">Ingresar</a></li>
-        <li><a href="index.html">Salir</a></li>
-      </ul>
-    </div>
-  </div>
+  <?php include_once $_SERVER['DOCUMENT_ROOT'] . '/websiteBidOn/encabezado.php'; ?>
   <div class="wrapper-content">
-
-      <!-- INSERT SLIDER HERE -->
-      
-      
-      <div class="searchbox">
-        <input name="search" type="text" value="Buscar..." size="50" maxlength="50" />
-      </div>
-    </div>
+    <?php include_once $_SERVER['DOCUMENT_ROOT'] . '/websiteBidOn/carrusel.php'; ?>
     <div class="content" id="userZone">
       <h2>Zona de usuarios</h2>
       <ul class="ingreso">
@@ -64,12 +42,7 @@
       </ul>
     </div>
   </div>
-  <div class="wrapper-footer">
-    <div class="footer"> </div>
-    <div class="copyright">
-      <p>Derechos Reservados 2015 - BidOn - Portal Social de Subastas en Línea</p>
-    </div>
-  </div>
+  <?php include_once $_SERVER['DOCUMENT_ROOT'] . '/websiteBidOn/pie.php'; ?>
 </div>
 </body>
 </html>
