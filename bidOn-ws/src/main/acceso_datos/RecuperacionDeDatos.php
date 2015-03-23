@@ -1,5 +1,5 @@
 <?php
-include_once '/home/a2601873/public_html/bidOn-ws/src/main/lectura_escritura_datos/LecturaMySql.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/lectura_escritura_datos/LecturaMySql.php';
 class RecuperacionDeDatos {
 	private $_lecturaMySql;
 

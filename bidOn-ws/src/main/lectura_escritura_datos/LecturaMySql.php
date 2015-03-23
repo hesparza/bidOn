@@ -1,24 +1,25 @@
 <?php
-include_once '/home/a2601873/public_html/bidOn-ws/src/main/modelo/Articulo.php';
-include_once '/home/a2601873/public_html/bidOn-ws/src/main/modelo/Calificacion.php';
-include_once '/home/a2601873/public_html/bidOn-ws/src/main/modelo/Categoria.php';
-include_once '/home/a2601873/public_html/bidOn-ws/src/main/modelo/Direccion.php';
-include_once '/home/a2601873/public_html/bidOn-ws/src/main/modelo/Envio.php';
-include_once '/home/a2601873/public_html/bidOn-ws/src/main/modelo/EstadoSubasta.php';
-include_once '/home/a2601873/public_html/bidOn-ws/src/main/modelo/EstadoUsuario.php';
-include_once '/home/a2601873/public_html/bidOn-ws/src/main/modelo/Imagen.php';
-include_once '/home/a2601873/public_html/bidOn-ws/src/main/modelo/Mensaje.php';
-include_once '/home/a2601873/public_html/bidOn-ws/src/main/modelo/Oferta.php';
-include_once '/home/a2601873/public_html/bidOn-ws/src/main/modelo/Pago.php';
-include_once '/home/a2601873/public_html/bidOn-ws/src/main/modelo/Rol.php';
-include_once '/home/a2601873/public_html/bidOn-ws/src/main/modelo/Subasta.php';
-include_once '/home/a2601873/public_html/bidOn-ws/src/main/modelo/TarjetaCredito.php';
-include_once '/home/a2601873/public_html/bidOn-ws/src/main/modelo/TarjetaCreditoUsuario.php';
-include_once '/home/a2601873/public_html/bidOn-ws/src/main/modelo/TipoEnvio.php';
-include_once '/home/a2601873/public_html/bidOn-ws/src/main/modelo/TipoPago.php';
-include_once '/home/a2601873/public_html/bidOn-ws/src/main/modelo/TipoSubasta.php';
-include_once '/home/a2601873/public_html/bidOn-ws/src/main/modelo/Usuario.php';
-include_once '/home/a2601873/public_html/bidOn-ws/src/main/modelo/UsuarioDireccion.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/modelo/Articulo.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/modelo/Calificacion.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/modelo/Categoria.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/modelo/Direccion.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/modelo/Envio.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/modelo/EstadoSubasta.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/modelo/EstadoUsuario.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/modelo/Imagen.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/modelo/Mensaje.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/modelo/Oferta.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/modelo/Pago.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/modelo/Rol.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/modelo/Subasta.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/modelo/TarjetaCredito.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/modelo/TarjetaCreditoUsuario.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/modelo/TipoEnvio.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/modelo/TipoPago.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/modelo/TipoSubasta.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/modelo/Usuario.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/modelo/UsuarioDireccion.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/recursos/Configuracion.php';
 
 class LecturaMySql {
 	private $_conn;
@@ -114,12 +115,11 @@ class LecturaMySql {
      * que es: todas las letras minusculas y guiones bajos en lugar de espacios.
      */
     private function aFormatoDeBD($cadena) {
-    	return strtolower(preg_replace('/\B([A-Z])/', '_$1', $cadena));
+    	return ucfirst(strtolower(preg_replace('/\B([A-Z])/', '_$1', $cadena)));
     }
     
     private function abrirConexion() {
-    	$this->_conn = mysqli_connect(Configuracion::URL, Configuracion::USUARIO, Configuracion::PASSWD, Configuracion::BASEDEDATOS, Configuracion::PUERTO, 
-Configuracion::SOCKET);
+    	$this->_conn = mysqli_connect(Configuracion::URL, Configuracion::USUARIO, Configuracion::PASSWD, Configuracion::BASEDEDATOS);
     	if ($this->_conn->connect_errno) {
     		return ("Falló la conexión: " . $this->_conn->connect_error);
     	}    	

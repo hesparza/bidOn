@@ -1,6 +1,6 @@
 <?php
-include_once 'src/main/acceso_datos/MantenimientoDeDatos.php';
-include_once 'src/main/acceso_datos/RecuperacionDeDatos.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/acceso_datos/MantenimientoDeDatos.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/acceso_datos/RecuperacionDeDatos.php';
 class Negocios {
 	private $_mantenimientoDeDatos;
 	private $_recuperacionDeDatos;
