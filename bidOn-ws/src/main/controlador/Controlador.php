@@ -1,6 +1,6 @@
 <?php
-include_once 'src/main/controlador/procesadorDeRespuestas.php';
-include_once 'src/main/negocios/Negocios.php';
+include_once '/home/a2601873/public_html/bidOn-ws/src/main/controlador/procesadorDeRespuestas.php';
+include_once '/home/a2601873/public_html/bidOn-ws/src/main/negocios/Negocios.php';
 class Controlador {
 	private $_formato;
 	private $_prefijo;
@@ -35,9 +35,7 @@ class Controlador {
 
 		$this->_parametros = $parametros;		
 		$this->procesadorDeRespuestas = new ProcesadorDeRespuestas();
-		
 		register_shutdown_function( "manejador_de_errores" );
-
 		$this->_negocios =  new Negocios();
 	}		
 	

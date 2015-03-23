@@ -1,26 +1,25 @@
 <?php
-include_once 'src/main/modelo/Articulo.php';
-include_once 'src/main/modelo/Calificacion.php';
-include_once 'src/main/modelo/Categoria.php';
-include_once 'src/main/modelo/Direccion.php';
-include_once 'src/main/modelo/Envio.php';
-include_once 'src/main/modelo/EstadoSubasta.php';
-include_once 'src/main/modelo/EstadoUsuario.php';
-include_once 'src/main/modelo/Imagen.php';
-include_once 'src/main/modelo/Mensaje.php';
-include_once 'src/main/modelo/Oferta.php';
-include_once 'src/main/modelo/Pago.php';
-include_once 'src/main/modelo/Rol.php';
-include_once 'src/main/modelo/Subasta.php';
-include_once 'src/main/modelo/TarjetaCredito.php';
-include_once 'src/main/modelo/TarjetaCreditoUsuario.php';
-include_once 'src/main/modelo/TipoEnvio.php';
-include_once 'src/main/modelo/TipoPago.php';
-include_once 'src/main/modelo/TipoSubasta.php';
-include_once 'src/main/modelo/Usuario.php';
-include_once 'src/main/modelo/UsuarioDireccion.php';
+include_once '/home/a2601873/public_html/bidOn-ws/src/main/modelo/Articulo.php';
+include_once '/home/a2601873/public_html/bidOn-ws/src/main/modelo/Calificacion.php';
+include_once '/home/a2601873/public_html/bidOn-ws/src/main/modelo/Categoria.php';
+include_once '/home/a2601873/public_html/bidOn-ws/src/main/modelo/Direccion.php';
+include_once '/home/a2601873/public_html/bidOn-ws/src/main/modelo/Envio.php';
+include_once '/home/a2601873/public_html/bidOn-ws/src/main/modelo/EstadoSubasta.php';
+include_once '/home/a2601873/public_html/bidOn-ws/src/main/modelo/EstadoUsuario.php';
+include_once '/home/a2601873/public_html/bidOn-ws/src/main/modelo/Imagen.php';
+include_once '/home/a2601873/public_html/bidOn-ws/src/main/modelo/Mensaje.php';
+include_once '/home/a2601873/public_html/bidOn-ws/src/main/modelo/Oferta.php';
+include_once '/home/a2601873/public_html/bidOn-ws/src/main/modelo/Pago.php';
+include_once '/home/a2601873/public_html/bidOn-ws/src/main/modelo/Rol.php';
+include_once '/home/a2601873/public_html/bidOn-ws/src/main/modelo/Subasta.php';
+include_once '/home/a2601873/public_html/bidOn-ws/src/main/modelo/TarjetaCredito.php';
+include_once '/home/a2601873/public_html/bidOn-ws/src/main/modelo/TarjetaCreditoUsuario.php';
+include_once '/home/a2601873/public_html/bidOn-ws/src/main/modelo/TipoEnvio.php';
+include_once '/home/a2601873/public_html/bidOn-ws/src/main/modelo/TipoPago.php';
+include_once '/home/a2601873/public_html/bidOn-ws/src/main/modelo/TipoSubasta.php';
+include_once '/home/a2601873/public_html/bidOn-ws/src/main/modelo/Usuario.php';
+include_once '/home/a2601873/public_html/bidOn-ws/src/main/modelo/UsuarioDireccion.php';
 
-include_once 'src/main/recursos/Configuracion.php';
 class EscrituraMySql {
 	private $_conn;
 	const NOMBRE_METODO = 'establecer';
