@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <div class="wrapper-slides">
 	<!-- SlidesJS Required: Start Slides -->
 	<!-- The container is used to define the width of the slideshow -->

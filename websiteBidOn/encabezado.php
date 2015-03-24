@@ -1,4 +1,5 @@
-<?php 
+<?php
+session_start();
 ?>
 <div class="wrapper-header">
     <div class="header"> <a href="#"><img src="img/logoBidOn.png" hspace="15" vspace="10" border="0" /></a>
@@ -10,9 +11,14 @@
         <li><a href="contacto.php">Contacto</a></li>
       </ul>
       <ul class="submainmenu">
-        <li><a href="#">Carrito</a></li>
-        <li><a href="inicioSesion.php">Ingresar</a></li>
-        <li><a href="index.php">Salir</a></li>
+        <?php 
+	        if(isset($_SESSION["nomUsuario"])) {
+	      		echo '<li><u><a href="#">'. $_SESSION["nomUsuario"] .'</a></u></li>';
+	        } else {
+	        	echo '<li><a href="inicioSesion.php">Ingresar</a></li>';
+	        }	        	
+        ?>        
+        <li><a href="destruirSesion.php">Salir</a></li>
       </ul>
     </div>
   </div>

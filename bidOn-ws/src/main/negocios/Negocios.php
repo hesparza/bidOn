@@ -15,11 +15,11 @@ class Negocios {
 	 */
 	function inicioSesion($usuario) {
 		if (!property_exists($usuario, 'nomUsuario') || !property_exists($usuario, 'contrasena')) {
-			return "Es necesario proveer el nombre de usuario y contrase&ntilde;a";
+			return "Es necesario proveer el nombre de usuario y contraseña";
 		}
 		$_usuario = $this->_recuperacionDeDatos->leerUsuarioPorNomUsuario($usuario);
 		if (gettype ($_usuario) == "string") {
-			return new Error('El nombre de usuario y contrase&ntilde;a son incorrectos.', $_usuario);
+			return new Error('El nombre de usuario y contrasña son incorrectos.', $_usuario);
 		} else {
 			return $_usuario;
 		}

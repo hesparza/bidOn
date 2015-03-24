@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -9,6 +12,7 @@
 <link rel="stylesheet" href="css/styles.css" />
 <link rel="stylesheet" href="css/font-awesome.min.css">
 <script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/configuracion.js"></script>
 <script type="text/javascript" src="js/funcionesComunes.js"></script>
 <script type="text/javascript" src="js/inicioSesion.js"></script>
 </head><body>

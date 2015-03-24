@@ -1,4 +1,6 @@
-<?php ?>
+<?php
+session_start();
+?>
   <div class="wrapper-footer">
     <div class="footer"> </div>
     <div class="copyright">
