@@ -10,7 +10,7 @@ var FuncionesComunes = function(){
 		  async: esAsincrono,	
 		  contentType: "application/json;",
 		  data: JSON.stringify(jsonObj),
-		  success: function(data){funcionExito(data); result=true;},
+		  success: function(data){funcionExito(data); result=data;},
 		  failure: function(data) { alert(data); result=false;}
 		});	
 		return result;

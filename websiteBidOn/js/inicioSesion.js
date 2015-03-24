@@ -5,17 +5,26 @@ var inicioSesion = function(obj) {
 			console.log(obj.datos.error);
 		} else {
 			console.log("Id: " + obj.datos.id + " Nombre: " + obj.datos.nombre);
-			var uri = CONFIGURACION.get('SERVIDOR_URL') + "iniciarSesion.php?" + "id=" + obj.datos.id
-																+ "&estadoUsuarioId=" + obj.datos.estadoUsuarioId 
-																+ "&rolId=" + obj.datos.rolId 
-																+ "&nombre=" + obj.datos.nombre 
-																+ "&apellidoP=" + obj.datos.apellidoP 
-																+ "&apellidoM=" + obj.datos.apellidoM 
-																+ "&correo=" + obj.datos.correo 
-																+ "&nomUsuario=" + obj.datos.nomUsuario 
-//																+ "&contrasena=" + obj.datos.contrasena 
-																+ "&reputacion=" + obj.datos.reputacion;
-			window.location.replace(uri);
+			var fc = new FuncionesComunes();
+			var uri = CONFIGURACION.get('ROL')  + '/id';
+			var datos = {id:obj.datos.rolId};
+			var rol = fc.llamadaWS(datos,uri,'GET', false, function(e){}, falloLlamada);
+			
+			if (rol != false && !rol.datos.hasOwnProperty('error')) {
+				var uri = CONFIGURACION.get('SERVIDOR_URL') + "iniciarSesion.php?" + "id=" + obj.datos.id
+				+ "&estadoUsuarioId=" + obj.datos.estadoUsuarioId 
+				+ "&rol=" + rol.datos.nombre
+				+ "&nombre=" + obj.datos.nombre 
+				+ "&apellidoP=" + obj.datos.apellidoP 
+				+ "&apellidoM=" + obj.datos.apellidoM 
+				+ "&correo=" + obj.datos.correo 
+				+ "&nomUsuario=" + obj.datos.nomUsuario 
+				+ "&reputacion=" + obj.datos.reputacion;
+				window.location.replace(uri);				
+			} else {
+				alert("Error al tratar de hacer inicio de sesión. Por favor contacte al administrador");
+			}				
+
 //			fc.llamadaWS(datos,uri,'GET', false, inicioSesion, falloLlamada);
 		}			
 	}	
@@ -37,7 +46,7 @@ $(document).ready(function() {
 		}
 		console.log('FormaInicioSesion esta correcta');
 		var datos = {nomUsuario:$("#nomUsuario").val(), contrasena:$("#contrasena").val()};
-		fc.llamadaWS(datos,CONFIGURACION.get('INICIO_SESION'),'POST', false, inicioSesion, falloLlamada);
+		obj = fc.llamadaWS(datos,CONFIGURACION.get('INICIO_SESION'),'POST', false, inicioSesion, falloLlamada);
 		return false;
 	});	
 	//return false;

@@ -51,7 +51,7 @@ class Controlador {
 	function complementarNombre() {
 		for ($i = 2; $i < sizeof($this->_parametros); $i++) {
 			if ($this->_parametros[$i] != '') {
-				$resultado = $resultado . 'Por' . $this->_parametros[$i];
+				$resultado = $resultado . 'Por' .ucfirst($this->_parametros[$i]);
 			}
 		}
 		return $resultado;
@@ -69,14 +69,17 @@ class Controlador {
 		}			
 		switch($_SERVER['REQUEST_METHOD']) {
 			case 'GET':
-				$resultado = '';		
+				$resultado = array();		
 				$datosDeEntrada = json_decode($cuerpo);
 				for ($i = 2; $i < sizeof($this->_parametros); $i++) {
 					$llave = $this->_parametros[$i];
 					if (isset($datosDeEntrada)) {
-						$i === 2 ? $resultado = $datosDeEntrada->{$llave} : $resultado = $resultado . ',' . $datosDeEntrada->{$llave};
+// 						$i === 2 ? $resultado = $datosDeEntrada->{$llave} : $resultado .= ',' . $datosDeEntrada->{$llave};
+						$resultado[$llave]=$datosDeEntrada->{$llave};
 					}
+					echo 'llave== ' . $llave . '=====';
 				}
+				$resultado = (object)$resultado;
 				if ($resultado === "") {
 					throw new Exception("Metodo no disponible", 405);
 				}						
@@ -104,7 +107,9 @@ class Controlador {
 	 * Determina el método que hay que llamar
 	 */
 	function rutearLlamada() {
-		if ((sizeof($this->_parametros) - 2) >= 1 || $this->_prefijo === 'agregar' || $this->_prefijo === 'editar' || $this->_prefijo === 'remover') {
+		$count = sizeof($this->_parametros);
+		$count = $count - 2;
+		if (($count >= 1) || $this->_prefijo === 'agregar' || $this->_prefijo === 'editar' || $this->_prefijo === 'remover') {
 			$hayParametros = TRUE;
 		}
 		// rutear la llamada a su metodo correspondiente

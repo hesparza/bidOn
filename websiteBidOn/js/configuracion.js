@@ -8,6 +8,7 @@ var CONFIGURACION = (function() {
 	var private = {
 		'INICIO_SESION' : SERVIDOR_ACTUAL_WS + 'InicioSesion',
 		'REGISTRO_NUEVO_USUARIO' : SERVIDOR_ACTUAL_WS + 'RegistroNuevoUsuario',
+		'ROL' : SERVIDOR_ACTUAL_WS + 'Rol',
 		'SERVIDOR_URL' : SERVIDOR_ACTUAL,
 	};
 

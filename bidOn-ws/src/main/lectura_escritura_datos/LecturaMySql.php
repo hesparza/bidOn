@@ -19,6 +19,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/modelo/TipoPago.php
 include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/modelo/TipoSubasta.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/modelo/Usuario.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/modelo/UsuarioDireccion.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/modelo/Error.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/recursos/Configuracion.php';
 
 class LecturaMySql {
@@ -37,20 +38,19 @@ class LecturaMySql {
         $parametrosNecesarios = array_map(function($word) { return lcfirst($word); }, $parametrosNecesarios);        
 //         echo '$parametrosNecesarios = '; print_r($parametrosNecesarios);
         	//Hay parametros en particular para hacer la consulta?
-        	if (isset($objeto)) {
+        	if (is_object($objeto)) {
         		foreach (get_object_vars($objeto) as $llave => $valor) {
-        			$objTmp= new $clase();
         			$comillas = "";
-        			if (gettype ($llave) == "string") {
+        			if (gettype ($valor) == "string") {
         				$comillas = "'";
-        			} 
-
-					if(property_exists($objTmp, $llave))
+        			}
+//         			echo 'clase  ' . $clase . '  asd';
+//         			echo '$llave  ' . $llave . '  asd';
+					if(property_exists($clase, $llave))
 					{
-// 						echo '   valor= ' . $valor .'   ';
-						$consultaWhere .= $this->aFormatoDeBD($llave) . ' = ' . $comillas . $this->aFormatoDeBD($valor) . $comillas . ' and ';
+						$consultaWhere .= lcfirst($this->aFormatoDeBD($llave)) . ' = ' . $comillas . lcfirst($this->aFormatoDeBD($valor)) . $comillas . ' and ';
 					} else {
-		                return 'El objeto recibido no es correcto';
+		                return new Error('Error al leer objeto.','El objeto recibido no es correcto');
 		            }		            
         		}
         		foreach ($parametrosNecesarios as $llave => $valor) {
@@ -104,12 +104,12 @@ class LecturaMySql {
 	// 			print_r($objResultado);
 			} else {
 				$this->cerrarConexion();
-				return 'No se encontraron resultados para la consulta';
+				return new Error('Error al leer objeto.','No se encontraron resultados para la consulta');
 			}
 		} else {
 			$error = $this->_conn->error;
 			$this->cerrarConexion();
-			return 'Error al realizar consulta: ' . $error;
+			return new Error('Error al leer objeto.','Error al realizar consulta: ' . $error);
 		}	
 
 		$this->cerrarConexion();

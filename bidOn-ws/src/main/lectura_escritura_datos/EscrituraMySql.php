@@ -19,6 +19,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/modelo/TipoPago.php
 include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/modelo/TipoSubasta.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/modelo/Usuario.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/modelo/UsuarioDireccion.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/modelo/Error.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/recursos/Configuracion.php';
 
 class EscrituraMySql {
@@ -47,7 +48,7 @@ class EscrituraMySql {
 				$consultaVal .= "'" . $objeto->{$valor} . "'" . ',';
 				$nObjeto->$metodosEstablecer[$llave]($objeto->{$valor});
 			} else {
-				return 'El objeto recibido no es correcto. La propiedad: ' . $valor . ' no se encuentra.';
+				return new Error('Error al agregar nuevo objeto.','El objeto recibido no es correcto. La propiedad: ' . $valor . ' no se encuentra.');
 			}
 		}
 		$consultaCol = $this->eliminarComaAlFinal($consultaCol) . ') '; //Remover la ultima coma
@@ -58,7 +59,7 @@ class EscrituraMySql {
 		if ($this->_conn->query($consulta) == FALSE) {			
 			$error = $this->_conn->error;
 			$this->cerrarConexion();
-			return 'Error al insertar objeto: ' . $error;
+			return new Error('Error al agregar nuevo objeto.','Error al insertar objeto: ' . $error);
 		}
 		$this->cerrarConexion();
 		return $nObjeto;  
@@ -86,7 +87,7 @@ class EscrituraMySql {
 				}
 				$nObjeto->$metodosEstablecer[$llave]($objeto->{$valor});
 			} else {
-				return 'El objeto recibido no es correcto. La propiedad: ' . $valor . ' no se encuentra.';
+				return new Error('Error al actualizar objeto.','El objeto recibido no es correcto. La propiedad: ' . $valor . ' no se encuentra.');
 			}
 		}
 		$consultaCol = $this->eliminarComaAlFinal($consultaCol); //Remover la ultima coma
@@ -95,7 +96,7 @@ class EscrituraMySql {
 		if ($this->_conn->query($consulta) == FALSE) {
 			$error = $this->_conn->error;
 			$this->cerrarConexion();
-			return 'Error al actualizar objeto: ' . $error;
+			return new Error('Error al actualizar objeto.','Error al actualizar objeto: ' . $error);
 		}
 		$this->cerrarConexion();
 		return $nObjeto;		
@@ -108,7 +109,7 @@ class EscrituraMySql {
 			$consulta .= $objeto->{'id'};
 		} 
 		else {
-			return 'El objeto recibido no es correcto. No se encuentra la propiedad id.';
+			return new Error('Error al borrar objeto.','El objeto recibido no es correcto. No se encuentra la propiedad id.');
 		}
 		
 		$this->abrirConexion();		
@@ -116,12 +117,12 @@ class EscrituraMySql {
 		$resultado = $this->_conn->query('SELECT * FROM ' . $this->aFormatoDeBD($clase) . ' WHERE id='. $objeto->{'id'});		
 		if ($resultado->num_rows < 1) {
 			$this->cerrarConexion();
-			return 'No se encontraron objetos a eliminar';
+			return new Error('Error al borrar objeto.','No se encontraron objetos a eliminar');
 		}
 		if ($this->_conn->query($consulta) == FALSE) {
 			$error = $this->_conn->error;
 			$this->cerrarConexion();
-			return 'Error al eliminar objeto: ' . $error;
+			return new Error('Error al borrar objeto.','Error al eliminar objeto: ' . $error);
 		}
 		$this->cerrarConexion();
 		return "Ok";

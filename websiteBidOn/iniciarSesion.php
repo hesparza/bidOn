@@ -2,7 +2,7 @@
 session_start();
 $_SESSION["id"] = htmlspecialchars($_GET["id"]);
 $_SESSION["estadoUsuarioId"] = htmlspecialchars($_GET["estadoUsuarioId"]);
-$_SESSION["rolId"] = htmlspecialchars($_GET["rolId"]);
+$_SESSION["rol"] = htmlspecialchars($_GET["rol"]);
 $_SESSION["nombre"] = htmlspecialchars($_GET["nombre"]);
 $_SESSION["apellidoP"] = htmlspecialchars($_GET["apellidoP"]);
 $_SESSION["apellidoM"] = htmlspecialchars($_GET["apellidoM"]);
