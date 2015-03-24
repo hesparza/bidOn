@@ -63,7 +63,7 @@ class Controlador {
 	function obtenerParametros() {
 		$cuerpo = file_get_contents('php://input');
 		//print_r($cuerpo);
-		//echo 'cuerpo = ' . $cuerpo . '<br />';
+// 		echo 'cuerpo = ' . $cuerpo . '<br />';
 		if (isset($cuerpo) == false && $cuerpo !== "") {
 			return '';
 		}			
@@ -164,7 +164,16 @@ class Controlador {
 				} else {
 					throw new Exception("Metodo no disponible", 405);
 				}				
-			break;	
+				break;
+			case 'InicioSesion':
+				$nombreMetodo =  lcfirst($this->_parametros[1]);
+// 				echo '$nombreMetodo ->-> ' .$nombreMetodo . ' <-<- ';
+				if(method_exists($this->_negocios, $nombreMetodo)) {
+					$datos = $this->_negocios->$nombreMetodo($this->obtenerParametros());
+				} else {
+					throw new Exception("Metodo no disponible", 405);
+				}				
+				break;
 		    default:
 		        throw new Exception("URL desconocida", 404);
 		        break;

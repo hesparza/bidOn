@@ -1,6 +1,7 @@
 <?php
 include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/acceso_datos/MantenimientoDeDatos.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/acceso_datos/RecuperacionDeDatos.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/modelo/Error.php';
 class Negocios {
 	private $_mantenimientoDeDatos;
 	private $_recuperacionDeDatos;
@@ -9,6 +10,24 @@ class Negocios {
 		$this->_recuperacionDeDatos =  new RecuperacionDeDatos();
 	}
 
+	/**
+	 * Reglas de negocio
+	 */
+	function inicioSesion($usuario) {
+		if (!property_exists($usuario, 'nomUsuario') || !property_exists($usuario, 'contrasena')) {
+			return "Es necesario proveer el nombre de usuario y contrase&ntilde;a";
+		}
+		$_usuario = $this->_recuperacionDeDatos->leerUsuarioPorNomUsuario($usuario);
+		if (gettype ($_usuario) == "string") {
+			return new Error('El nombre de usuario y contrase&ntilde;a son incorrectos.', $_usuario);
+		} else {
+			return $_usuario;
+		}
+	}
+	
+	/**
+	 * Operaciones comunes
+	 */
 	/**
 	Obtener todos los datos
 	**/

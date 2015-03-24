@@ -29,6 +29,7 @@ class LecturaMySql {
     function seleccionar($objeto, $clase) {
         $consultaCol = 'SELECT ';
         $consultaVal = '';
+        $consultaWhere = ' WHERE ';
         
         $arr = get_class_methods($clase);
         $metodosEstablecer = array_values(array_filter($arr, function($var){return preg_match('/' . self::NOMBRE_METODO . '/', $var);}));
@@ -37,19 +38,27 @@ class LecturaMySql {
 //         echo '$parametrosNecesarios = '; print_r($parametrosNecesarios);
         	//Hay parametros en particular para hacer la consulta?
         	if (isset($objeto)) {
-        		foreach ($parametrosNecesarios as $llave => $valor) {
-					if(property_exists($objeto, $valor))
+        		foreach (get_object_vars($objeto) as $llave => $valor) {
+        			$objTmp= new $clase();
+        			$comillas = "";
+        			if (gettype ($llave) == "string") {
+        				$comillas = "'";
+        			} 
+
+					if(property_exists($objTmp, $llave))
 					{
-		                $consultaCol .= $this->aFormatoDeBD($valor) . ','; 
-		                $consultaVal .= "'" . $objeto->{$valor} . "'" . ',';
-// 		                $nObjeto->$metodosEstablecer[$llave]($objeto->{$valor});
+// 						echo '   valor= ' . $valor .'   ';
+						$consultaWhere .= $this->aFormatoDeBD($llave) . ' = ' . $comillas . $this->aFormatoDeBD($valor) . $comillas . ' and ';
 					} else {
 		                return 'El objeto recibido no es correcto';
 		            }		            
         		}
+        		foreach ($parametrosNecesarios as $llave => $valor) {
+        			$consultaCol .= $this->aFormatoDeBD($valor) . ',';
+        		}        		
         		$consultaCol = $this->eliminarComaAlFinal($consultaCol) ; //Remover la ultima coma
-        		$consultaVal = $this->eliminarComaAlFinal($consultaVal); //Remover la ultima coma
-        		$consulta = $consultaCol . $consultaVal . ' FROM ' . $clase . ';';
+        		$consultaWhere = $this->eliminarAndAlFinal($consultaWhere); //Remover la ultima coma
+        		$consulta = $consultaCol . ' FROM ' . $clase . '' . $consultaWhere . ' ;';
             } else {
             	foreach ($parametrosNecesarios as $llave => $valor) {
 	            	$consultaCol .= $this->aFormatoDeBD($valor) . ',';
@@ -58,41 +67,45 @@ class LecturaMySql {
             	$consultaCol = $this->eliminarComaAlFinal($consultaCol); //Remover la ultima coma
             	$consulta = $consultaCol . ' FROM ' . $this->aFormatoDeBD($clase) . ';';
             }
-
+// 		echo '===== CONSULTA =====> ' . $consulta . '           ';
         $this->abrirConexion();
 		if ($resultado = $this->_conn->query($consulta)) {
-
-			while ($columnaInfo = $resultado->fetch_field()){
-				$arrColumnaTipo[] = $columnaInfo->type;
-			}
-// 			printf (" \n");
-			$i = 0;
-			$nObjeto = new $clase();
-			while ($tupla = $resultado->fetch_array(MYSQLI_ASSOC)) {
-				foreach ($parametrosNecesarios as $llave => $valor) {					
-// 					printf (" | %s  (%d)| ", $tupla[$this->aFormatoDeBD($valor)], $arrColumnaTipo[$i]);
-					switch ($arrColumnaTipo[$i]) {
-						case 3:
-							settype($tupla[$this->aFormatoDeBD($valor)], 'int');
-							$nObjeto->$valor = $tupla[$this->aFormatoDeBD($valor)];
-							break;
-						case 5:
-							settype($tupla[$this->aFormatoDeBD($valor)], 'float');
-							$nObjeto->$valor = $tupla[$this->aFormatoDeBD($valor)];
-							break;
-						default:
-							$nObjeto->$valor = $tupla[$this->aFormatoDeBD($valor)];
-							break;
-					}
-					
-					$i++;
+			if ($resultado->num_rows > 0) {
+				while ($columnaInfo = $resultado->fetch_field()){
+					$arrColumnaTipo[] = $columnaInfo->type;
 				}
-				$i = 0;				
-// 				printf (" \n");
-				$objResultado[] = $nObjeto;
+	// 			printf (" \n");
+				$i = 0;
 				$nObjeto = new $clase();
+				while ($tupla = $resultado->fetch_array(MYSQLI_ASSOC)) {
+					foreach ($parametrosNecesarios as $llave => $valor) {					
+	// 					printf (" | %s  (%d)| ", $tupla[$this->aFormatoDeBD($valor)], $arrColumnaTipo[$i]);
+						switch ($arrColumnaTipo[$i]) {
+							case 3:
+								settype($tupla[$this->aFormatoDeBD($valor)], 'int');
+								$nObjeto->$valor = $tupla[$this->aFormatoDeBD($valor)];
+								break;
+							case 5:
+								settype($tupla[$this->aFormatoDeBD($valor)], 'float');
+								$nObjeto->$valor = $tupla[$this->aFormatoDeBD($valor)];
+								break;
+							default:
+								$nObjeto->$valor = $tupla[$this->aFormatoDeBD($valor)];
+								break;
+						}
+						
+						$i++;
+					}
+					$i = 0;				
+	// 				printf (" \n");
+					$objResultado[] = $nObjeto;
+					$nObjeto = new $clase();
+				}
+	// 			print_r($objResultado);
+			} else {
+				$this->cerrarConexion();
+				return 'No se encontraron resultados para la consulta';
 			}
-// 			print_r($objResultado);
 		} else {
 			$error = $this->_conn->error;
 			$this->cerrarConexion();
@@ -100,7 +113,7 @@ class LecturaMySql {
 		}	
 
 		$this->cerrarConexion();
-		return $objResultado;  
+		return sizeof($objResultado) == 1 ? $objResultado[0] : $objResultado;  
     }
     
     /**
@@ -108,6 +121,13 @@ class LecturaMySql {
      */
     private function eliminarComaAlFinal($cadena) {
     	return preg_replace('/,$/','', $cadena);
+    }
+    
+    /**
+     * Elimina ultimo "and"
+     */
+    private function eliminarAndAlFinal($cadena) {
+    	return preg_replace('/and $/','', $cadena);
     }
     
     /**

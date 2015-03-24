@@ -1,7 +1,7 @@
 <?php
 class Configuracion {
 	//Base de datos
-	const URL = 'localhost';
+	const URL = '127.0.0.1';
 	const USUARIO = "bidonadm";
 	const PASSWD = "password";
 	const BASEDEDATOS = "bidon";
