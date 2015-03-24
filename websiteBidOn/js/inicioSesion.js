@@ -17,21 +17,20 @@ var alertaExito = function(datos) {
 ////			client_password : CONFIG.get('OAUTH2_CLIENT_PASSWORD')
 ////		};
 //	
-//	resultado = funCom.llamadaWS({},'http://localhost:80/bidOn-ws/controlador/Roles','GET', true, alertaExito, function() {});
+//	
 ////    (jsonObj, uri, tipo, esSincrono, funcionExito, funcionFallo)
 //});
 
 $(document).ready(function() {
 	var fc = new FuncionesComunes();
 	$("#FormaInicioSesion").submit(function() {        
-		if (fc.hayCamposVacios([$("#nomUsuario").val(),
-		                    $("#contrasena").val()]))
+		if (!fc.todosLosCamposLlenos([$("#nomUsuario").val(),$("#contrasena").val()]))
 		{
 			alert('Por favor llene todos los campos');
 			return false;
 		}
-		console.log('FormaInicioSesion esta correcta');
-		//return true;
+		console.log('FormaInicioSesion esta correcta');		
 	});
-
+	//resultado = fc.llamadaWS({},'http://localhost:80/bidOn-ws/controlador/Roles','GET', true, alertaExito, function() {alert("fallo");});
+	//return false;
 });
