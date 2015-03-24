@@ -2,6 +2,7 @@ var inicioSesion = function(obj) {
 	if ( typeof obj === 'object') {
 		if (obj.datos.hasOwnProperty('error')) {
 			alert(obj.datos.mensaje);
+			console.log(obj.datos.error);
 		} else {
 			console.log("Id: " + obj.datos.id + " Nombre: " + obj.datos.nombre);
 			var uri = CONFIGURACION.get('SERVIDOR_URL') + "iniciarSesion.php?" + "id=" + obj.datos.id
@@ -26,21 +27,6 @@ var falloLlamada = function(obj) {
 /**
  * Metodo principal
  */
-//$(document).ready(function() {	
-//	var funCom  = new FuncionesComunes();
-//	
-////	var jsonObj = {
-////			grant_type : "authorization_code",
-////			code : $.urlParameters('code'),
-////			redirect_uri : EPMgr.getCurrentEndPointRedirectUri(),
-////			client_id : CONFIG.get('OAUTH2_CLIENT_ID'),
-////			client_password : CONFIG.get('OAUTH2_CLIENT_PASSWORD')
-////		};
-//	
-//	
-////    (jsonObj, uri, tipo, esSincrono, funcionExito, funcionFallo)
-//});
-
 $(document).ready(function() {
 	var fc = new FuncionesComunes();
 	$("#FormaInicioSesion").submit(function() {        

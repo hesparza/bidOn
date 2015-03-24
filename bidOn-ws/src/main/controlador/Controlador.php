@@ -166,6 +166,7 @@ class Controlador {
 				}				
 				break;
 			case 'InicioSesion':
+			case 'RegistroNuevoUsuario':				
 				$nombreMetodo =  lcfirst($this->_parametros[1]);
 // 				echo '$nombreMetodo ->-> ' .$nombreMetodo . ' <-<- ';
 				if(method_exists($this->_negocios, $nombreMetodo)) {

@@ -53,7 +53,7 @@ class EscrituraMySql {
 		$consultaCol = $this->eliminarComaAlFinal($consultaCol) . ') '; //Remover la ultima coma
 		$consultaVal = $this->eliminarComaAlFinal($consultaVal) . ');'; //Remover la ultima coma
 		$consulta = $consultaCol . $consultaVal;
-		
+// 		echo '===== CONSULTA =====> ' . $consulta . '           ';
 		$this->abrirConexion();
 		if ($this->_conn->query($consulta) == FALSE) {			
 			$error = $this->_conn->error;
@@ -61,7 +61,7 @@ class EscrituraMySql {
 			return 'Error al insertar objeto: ' . $error;
 		}
 		$this->cerrarConexion();
-		return json_encode($nObjeto);  
+		return $nObjeto;  
 	}
 
 	/**
@@ -98,7 +98,7 @@ class EscrituraMySql {
 			return 'Error al actualizar objeto: ' . $error;
 		}
 		$this->cerrarConexion();
-		return json_encode($nObjeto);		
+		return $nObjeto;		
 	}
 	
 	function borrar($objeto, $clase) {
@@ -151,8 +151,8 @@ class EscrituraMySql {
 	* Convierte el string $cadena al formato utilizado en la base de datos
 	* que es: todas las letras minusculas y guiones bajos en lugar de espacios.
 	*/
-	private function aFormatoDeBD($cadena) {
-		return ucfirst(strtolower(preg_replace('/\B([A-Z])/', '_$1', $cadena)));
+	private function aFormatoDeBD($cadena) {		
+		return ucfirst(preg_replace('/\B([A-Z])/', '_$1', $cadena));
 	}
 	
 	private function abrirConexion() {

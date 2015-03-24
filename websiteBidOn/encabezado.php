@@ -1,4 +1,5 @@
 <?php
+error_reporting(E_ERROR | E_PARSE);
 session_start();
 ?>
 <div class="wrapper-header">
@@ -14,11 +15,12 @@ session_start();
         <?php 
 	        if(isset($_SESSION["nomUsuario"])) {
 	      		echo '<li><u><a href="#">'. $_SESSION["nomUsuario"] .'</a></u></li>';
+	      		echo '<li><a href="destruirSesion.php">Salir</a></li>';
 	        } else {
+	        	echo '<li><a href="registro.php">Registrarse!</a></li>';
 	        	echo '<li><a href="inicioSesion.php">Ingresar</a></li>';
 	        }	        	
-        ?>        
-        <li><a href="destruirSesion.php">Salir</a></li>
+        ?>                
       </ul>
     </div>
   </div>

@@ -135,7 +135,7 @@ class LecturaMySql {
      * que es: todas las letras minusculas y guiones bajos en lugar de espacios.
      */
     private function aFormatoDeBD($cadena) {
-    	return ucfirst(strtolower(preg_replace('/\B([A-Z])/', '_$1', $cadena)));
+    	return ucfirst(preg_replace('/\B([A-Z])/', '_$1', $cadena));
     }
     
     private function abrirConexion() {

@@ -33,16 +33,26 @@ var FuncionesComunes = function(){
     }
 
     this.esNombreValido = function(str) {
-    	if (str.match('^[a-zA-Z0-9\-\_]+[a-zA-Z0-9]*$') != null) {
+    	if (str.match('^[a-zA-Z]+[a-zA-Z]*$') != null) {
     		return true;
     	} else {
     		return false;
     	}
     }
+    
+    this.esNombreUsuarioValido = function(str) {
+    	if (str.match('^[a-z]+[a-z]*$') != null) {
+    		if(str.length < 6){
+    			return false;
+    		}
+    		return true;
+    	} else {
+    		return false;
+    	}
+    }   
 
     this.esEmailValido = function(str) {
     	if (str.match('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$') != null) {
-    		console.log('here---'+str);
     		return true;
     	} else {
     		return false;
@@ -60,14 +70,22 @@ var FuncionesComunes = function(){
     	var r = 0;
     	var ref = this;
     	$.each(arr, function(index, value) {
-    		if (ref.noEstaVacio(value)) {
+    		if (ref.estaVacio(value)) {
     			r++;
     		}
     	});
-    	if (r > 1) {
-    		return true;
-    	} else {
+    	if (r >= 1) {
     		return false;
+    	} else {
+    		return true;
     	}
+    }
+    
+    this.borrarHtml = function(id) {
+    	$("#" + id).empty();
+    }
+    
+    this.insertarHeaderHtml = function(id,tamano,texto) {
+    	$("#" + id).append("<h" + tamano + ">" + texto + "</h" +tamano+ ">");
     }
 };

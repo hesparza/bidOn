@@ -17,12 +17,73 @@ class Negocios {
 		if (!property_exists($usuario, 'nomUsuario') || !property_exists($usuario, 'contrasena')) {
 			return "Es necesario proveer el nombre de usuario y contraseña";
 		}
-		$_usuario = $this->_recuperacionDeDatos->leerUsuarioPorNomUsuario($usuario);
-		if (gettype ($_usuario) == "string") {
+		$_usuario = $this->obtenerUsuarioPorNomUsuario($usuario);
+		if (is_string($_usuario)) {
 			return new Error('El nombre de usuario y contrasña son incorrectos.', $_usuario);
 		} else {
 			return $_usuario;
 		}
+	}
+	
+	function registroNuevoUsuario($datos) {
+		if (!property_exists($datos,'nombre') ||
+			!property_exists($datos,'apellidoP') ||
+			!property_exists($datos,'apellidoM') ||
+			!property_exists($datos,'correo') ||
+			!property_exists($datos,'nomUsuario') ||
+			!property_exists($datos,'contrasena')) {
+				return "Es necesario proveer todos los datos en la forma de registro.";
+			}
+		//Checar si el nombre de usuario no existe
+		$_nomUsuario['nomUsuario'] = $datos->nomUsuario;
+		$_nomUsuario = (object)$_nomUsuario;
+		$_usuario = $this->obtenerUsuarioPorNomUsuario($_nomUsuario);
+		if (is_object($_usuario)) {
+			return new Error('El nombre de usuario ya se encuentra en uso, por favor selecciona uno disinto.', $_usuario);
+		} else {
+			//Encontrar el id que representa a un usuario activo
+			$estadoUsuarios = $this->obtenerEstadoUsuarios();
+			$estadoUsuarioId = "";
+			foreach ($estadoUsuarios as $llave => $valor) {
+				if (strcmp($valor->nombre, 'Activo') == 0) {
+					$estadoUsuarioId= $valor->id;
+					break;
+				}					
+			}
+			if (strcmp($estadoUsuarioId, "") == 0) {
+				return new Error('Error al registrar nuevo usuario.', "No encontró un id que represente el estado activo para un usuario.");
+			}
+			
+			//Encontrar el id que representa al rol Usuario
+			$roles = $this->obtenerRoles();
+			$rolId = "";
+			foreach ($roles as $llave => $valor) {
+				if (strcmp($valor->nombre, 'Usuario') == 0) {
+					$rolId= $valor->id;
+					break;
+				}
+			}
+			if (strcmp($rolId, "") == 0) {
+				return new Error('Error al registrar nuevo usuario.', "No encontró un id que represente un usuario activo.");
+			}			
+			
+			$usuarios = $this->obtenerUsuarios();
+			$usuarios = (array)$usuarios;
+			
+			$datos = (array)$datos;
+			$datos['id'] = sizeof($usuarios) + 1;
+			$datos['estadoUsuarioId'] = $estadoUsuarioId;
+			$datos['rolId'] = $rolId;
+			$datos['reputacion'] = 0.0;
+			$datos = (object)$datos;
+			
+			$_usuario = $this->agregarUsuario($datos);
+			if (is_string($_usuario) ) {
+				return new Error('Error al registrar nuevo usuario.', $_usuario);
+			} else {
+				return $_usuario;
+			}
+		}			
 	}
 	
 	/**

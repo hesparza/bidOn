@@ -128,6 +128,7 @@ ul li {
 }
 .content#userZone {
 	background: url(../img/advisor.png) no-repeat left bottom;
+	min-height: 300px;
 }
 .content#userZone  h2 {
 	margin-left: 300px;
