@@ -58,7 +58,7 @@ class LecturaMySql {
         		}        		
         		$consultaCol = $this->eliminarComaAlFinal($consultaCol) ; //Remover la ultima coma
         		$consultaWhere = $this->eliminarAndAlFinal($consultaWhere); //Remover la ultima coma
-        		$consulta = $consultaCol . ' FROM ' . $clase . '' . $consultaWhere . ' ;';
+        		$consulta = $consultaCol . ' FROM ' . $this->aFormatoDeBD($clase) . '' . $consultaWhere . ' ;';
             } else {
             	foreach ($parametrosNecesarios as $llave => $valor) {
 	            	$consultaCol .= $this->aFormatoDeBD($valor) . ',';

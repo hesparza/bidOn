@@ -2,7 +2,7 @@ var registroUsuario = function(obj) {
 	if ( typeof obj === 'object') {
 		if (obj.datos.hasOwnProperty('error')) {
 			alert(obj.datos.mensaje);
-			console.log(obj.datos.error);
+			console.log("Mensaje de error: " + obj.datos.mensaje + ", error reportado: " + obj.datos.error);
 		} else {
 			var fc = new FuncionesComunes();
 			fc.borrarHtml("userZone");

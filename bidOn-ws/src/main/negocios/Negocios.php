@@ -18,9 +18,28 @@ class Negocios {
 			return "Es necesario proveer el nombre de usuario y contraseña";
 		}
 		$_usuario = $this->obtenerUsuarioPorNomUsuario($usuario);
-		if (is_string($_usuario)) {
-			return new Error('El nombre de usuario y contrasña son incorrectos.', $_usuario);
+		if (property_exists($_usuario, 'error')) {
+			return new Error('El nombre de usuario y contrasña son incorrectos.', $_usuario->obtenerError());
 		} else {
+			//Obtener el rol y el estado del usuario a partir de los IDs
+			$objTmp['id']=$_usuario->rolId;
+			$_rol = $this->obtenerRolPorId((object)$objTmp);
+			if (property_exists($_rol, 'error')) {
+				return new Error('Error al obtener el rol del usuario', $_rol->obtenerError());
+			}
+
+			//Obtener el estado del usuario
+			$objTmp = null;
+			$objTmp['id']=$_usuario->estadoUsuarioId;
+			$_estadoUsuario = $this->obtenerEstadoUsuarioPorId((object)$objTmp);
+			if (property_exists($_estadoUsuario, 'error')) {
+				return new Error('Error al obtener el estado del usuario', $_estadoUsuario->obtenerError());
+			}
+			
+			$_usuario = (array)$_usuario;
+			$_usuario['rol'] = $_rol->nombre;
+			$_usuario['estadoUsuario'] = $_estadoUsuario->nombre;
+			$_usuario = (object)$_usuario;			
 			return $_usuario;
 		}
 	}
@@ -38,8 +57,8 @@ class Negocios {
 		$_nomUsuario['nomUsuario'] = $datos->nomUsuario;
 		$_nomUsuario = (object)$_nomUsuario;
 		$_usuario = $this->obtenerUsuarioPorNomUsuario($_nomUsuario);
-		if (is_object($_usuario)) {
-			return new Error('El nombre de usuario ya se encuentra en uso, por favor selecciona uno disinto.', $_usuario);
+		if (property_exists($_usuario,'error')) {
+			return new Error('El nombre de usuario ya se encuentra en uso, por favor selecciona uno disinto.', $_usuario->obtenerError());
 		} else {
 			//Encontrar el id que representa a un usuario activo
 			$estadoUsuarios = $this->obtenerEstadoUsuarios();

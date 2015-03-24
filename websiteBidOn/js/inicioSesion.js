@@ -2,31 +2,24 @@ var inicioSesion = function(obj) {
 	if ( typeof obj === 'object') {
 		if (obj.datos.hasOwnProperty('error')) {
 			alert(obj.datos.mensaje);
-			console.log(obj.datos.error);
+			console.log("Mensaje de error: " + obj.datos.mensaje + ", error reportado: " + obj.datos.error);
 		} else {
-			console.log("Id: " + obj.datos.id + " Nombre: " + obj.datos.nombre);
-			var fc = new FuncionesComunes();
-			var uri = CONFIGURACION.get('ROL')  + '/id';
-			var datos = {id:obj.datos.rolId};
-			var rol = fc.llamadaWS(datos,uri,'GET', false, function(e){}, falloLlamada);
-			
-			if (rol != false && !rol.datos.hasOwnProperty('error')) {
-				var uri = CONFIGURACION.get('SERVIDOR_URL') + "iniciarSesion.php?" + "id=" + obj.datos.id
-				+ "&estadoUsuarioId=" + obj.datos.estadoUsuarioId 
-				+ "&rol=" + rol.datos.nombre
-				+ "&nombre=" + obj.datos.nombre 
-				+ "&apellidoP=" + obj.datos.apellidoP 
-				+ "&apellidoM=" + obj.datos.apellidoM 
-				+ "&correo=" + obj.datos.correo 
-				+ "&nomUsuario=" + obj.datos.nomUsuario 
-				+ "&reputacion=" + obj.datos.reputacion;
-				window.location.replace(uri);				
-			} else {
-				alert("Error al tratar de hacer inicio de sesión. Por favor contacte al administrador");
-			}				
-
-//			fc.llamadaWS(datos,uri,'GET', false, inicioSesion, falloLlamada);
-		}			
+			var uri = CONFIGURACION.get('SERVIDOR_URL') + "iniciarSesion.php?" + "id=" + obj.datos.id
+			+ "&estadoUsuario=" + obj.datos.estadoUsuario
+			+ "&rol=" + obj.datos.rol
+			+ "&estadoUsuarioId=" + obj.datos.estadoUsuarioId
+			+ "&rolId=" + obj.datos.rolId		
+			+ "&nombre=" + obj.datos.nombre 
+			+ "&apellidoP=" + obj.datos.apellidoP 
+			+ "&apellidoM=" + obj.datos.apellidoM 
+			+ "&correo=" + obj.datos.correo 
+			+ "&nomUsuario=" + obj.datos.nomUsuario 
+			+ "&reputacion=" + obj.datos.reputacion;
+			window.location.replace(uri);								
+		} 		
+	} else {
+		alert("Error al cargar datos de inicio de sesión. Por favor contacte al administrador");
+		return false;
 	}	
 }
 

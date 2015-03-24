@@ -49,9 +49,21 @@ class Controlador {
 	 * dependiendo de los parametros enviados en el URL
 	 */
 	function complementarNombre() {
-		for ($i = 2; $i < sizeof($this->_parametros); $i++) {
-			if ($this->_parametros[$i] != '') {
-				$resultado = $resultado . 'Por' .ucfirst($this->_parametros[$i]);
+		if (strcmp($_SERVER['REQUEST_METHOD'], 'GET') != 0){
+			for ($i = 2; $i < sizeof($this->_parametros); $i++) {
+				if ($this->_parametros[$i] != '') {
+					$resultado = $resultado . 'Por' .ucfirst($this->_parametros[$i]);
+				}
+			}
+		} else {
+			$esLlave = true;
+			for ($i = 2; $i < sizeof($this->_parametros); $i++) {
+				if ($this->_parametros[$i] != '' && $esLlave) {
+					$resultado = $resultado . 'Por' .ucfirst($this->_parametros[$i]);
+					$esLlave = false;
+				} else {
+					$esLlave = true;
+				}					
 			}
 		}
 		return $resultado;
@@ -63,26 +75,43 @@ class Controlador {
 	function obtenerParametros() {
 		$cuerpo = file_get_contents('php://input');
 		//print_r($cuerpo);
-// 		echo 'cuerpo = ' . $cuerpo . '<br />';
+// 		echo '____$cuerpo___=' . $cuerpo . '______';
 		if (isset($cuerpo) == false && $cuerpo !== "") {
 			return '';
 		}			
 		switch($_SERVER['REQUEST_METHOD']) {
 			case 'GET':
-				$resultado = array();		
-				$datosDeEntrada = json_decode($cuerpo);
+// 				$resultado = array();		
+// 				$datosDeEntrada = json_decode($cuerpo);
+// 				for ($i = 2; $i < sizeof($this->_parametros); $i++) {
+// 					$llave = $this->_parametros[$i];
+// 					if (isset($datosDeEntrada)) {
+// // 						$i === 2 ? $resultado = $datosDeEntrada->{$llave} : $resultado .= ',' . $datosDeEntrada->{$llave};
+// 						$resultado[$llave]=$datosDeEntrada->{$llave};
+// 					}
+// // 					echo 'llave== ' . $llave . '=====';
+// // 					echo '$datosDeEntrada->{$llave}   =  '. $datosDeEntrada->{$llave} . '     __';
+					
+// // 					print_r($datosDeEntrada);
+					
+
+// 				}
+// 				$resultado = (object)$resultado;
+// 				if ($resultado === "") {
+// 					throw new Exception("Metodo no disponible", 405);
+// 				}		
+				$esLlave = true;
+				$resultado = array();
 				for ($i = 2; $i < sizeof($this->_parametros); $i++) {
-					$llave = $this->_parametros[$i];
-					if (isset($datosDeEntrada)) {
-// 						$i === 2 ? $resultado = $datosDeEntrada->{$llave} : $resultado .= ',' . $datosDeEntrada->{$llave};
-						$resultado[$llave]=$datosDeEntrada->{$llave};
+					if ($esLlave) {
+						$llave = $this->_parametros[$i];
+						$esLlave = !$esLlave;
+					} else {
+						$resultado[$llave] = $this->_parametros[$i];
+						$esLlave = !$esLlave;
 					}
-					echo 'llave== ' . $llave . '=====';
-				}
+				}		
 				$resultado = (object)$resultado;
-				if ($resultado === "") {
-					throw new Exception("Metodo no disponible", 405);
-				}						
 				return $resultado;
 				break;
 			case 'POST':

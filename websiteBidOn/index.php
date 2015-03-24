@@ -1,16 +1,6 @@
 ﻿<?php
 error_reporting(E_ERROR | E_PARSE);
 session_start();
-echo 'id ' . $_SESSION["id"] . '<br />';
-echo 'estadoUsuarioId ' . $_SESSION["estadoUsuarioId"] . '<br />';
-echo 'rolId ' . $_SESSION["rol"] . '<br />';
-echo 'nombre ' . $_SESSION["nombre"] . '<br />';
-echo 'apellidoP ' . $_SESSION["apellidoP"] . '<br />';
-echo 'apellidoM ' . $_SESSION["apellidoM"] . '<br />';
-echo 'correo ' . $_SESSION["correo"] . '<br />';
-echo 'nomUsuario ' . $_SESSION["nomUsuario"] . '<br />';
-echo 'contrasena ' . $_SESSION["contrasena"] . '<br />';
-echo 'reputacion ' . $_SESSION["reputacion"] . '<br />';
 ?>
 <!DOCTYPE html>
 <html>
