@@ -313,5 +313,7 @@ $(document).ready(function() {
 		fc.llamadaWS(datos,CONFIGURACION.get('REGISTRO_NUEVA_SUBASTA'),'POST', false, registroSubasta, falloLlamada);
 		return false;
 	});	
-	//return false;
+	$("#cancel").click(function(){
+		window.location.replace('index.php');
+	});
 });
