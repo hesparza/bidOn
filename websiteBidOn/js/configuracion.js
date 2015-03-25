@@ -9,7 +9,9 @@ var CONFIGURACION = (function() {
 		'INICIO_SESION' : SERVIDOR_ACTUAL_WS + 'InicioSesion',
 		'REGISTRO_NUEVO_USUARIO' : SERVIDOR_ACTUAL_WS + 'RegistroNuevoUsuario',
 		'ROL' : SERVIDOR_ACTUAL_WS + 'Rol',
+		'CATEGORIAS' : SERVIDOR_ACTUAL_WS + 'Categorias',
 		'SERVIDOR_URL' : SERVIDOR_ACTUAL,
+		'URL_SUBIR_IMAGENES' : SERVIDOR_ACTUAL + 'subirImagenes.php',		
 	};
 
      return {

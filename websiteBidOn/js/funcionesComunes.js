@@ -60,7 +60,14 @@ var FuncionesComunes = function(){
     }    
     
     this.esNumerico = function (str) {
-    	if (str.match('^[0-9]+$') != null) {
+    	if (str.match('^[0-9]*$') != null) {
+    		return true;
+    	}
+    	return false;
+    }
+    
+    this.esNumericoDecimal = function (str) {
+    	if (str.match('^[0-9]+\.[0-9]{0,2}$') != null) {
     		return true;
     	}
     	return false;

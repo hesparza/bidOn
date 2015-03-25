@@ -12,7 +12,7 @@ session_start();
 	      		if (isset($_SESSION["rol"]) && isset($_SESSION["estadoUsuario"]) &&
 	      			strcmp($_SESSION["rol"],'Usuario') == 0 && 
 	      			strcmp($_SESSION["estadoUsuario"],'Activo') == 0) {
-	      			echo '<li><a href="registroSubasta.php">Crear Subasta</a></li>';
+	      			echo '<li><a href="nuevaSubasta.php">Crear Subasta</a></li>';
 	      			echo '<li><a href="misSubastas.php">Mis Subastas</a></li>';
 	      		}
 	        } else {
