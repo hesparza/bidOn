@@ -201,7 +201,10 @@ class Controlador {
 				break;
 			case 'InicioSesion':
 			case 'RegistroNuevoUsuario':
-			case 'RegistroNuevaSubasta':				
+			case 'RegistroNuevaSubasta':
+			case 'DatosSubasta':
+			case 'RegistroNuevaOferta':
+			case 'SubastasActivas':
 				$nombreMetodo =  lcfirst($this->_parametros[1]);
 // 				echo '$nombreMetodo ->-> ' .$nombreMetodo . ' <-<- ';
 				if(method_exists($this->_negocios, $nombreMetodo)) {

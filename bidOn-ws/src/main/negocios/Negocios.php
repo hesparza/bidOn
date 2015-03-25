@@ -108,7 +108,7 @@ class Negocios {
 		}			
 	}
 	
-	function RegistroNuevaSubasta($subasta) {
+	function registroNuevaSubasta($subasta) {
 		if (!property_exists($subasta,'articulo') ||
 			!property_exists($subasta,'precio') ||
 			!property_exists($subasta,'cantidad') ||
@@ -223,8 +223,8 @@ class Negocios {
 			$nSubasta['fechaInicio'] = $subasta->fechainicio;
 			$nSubasta['fechaFin'] = $subasta->fechafin;
 			$nSubasta['fechaAprobacion'] = '00-00-00';
-			$nSubasta['fechaCreacion'] = date('Y-m-d');;
-			$nSubasta['fechaModificacion'] = date('Y-m-d');;
+			$nSubasta['fechaCreacion'] = date('Y-m-d');
+			$nSubasta['fechaModificacion'] = date('Y-m-d');
 			$nSubasta = (object)$nSubasta;
 			
 			$_nSubasta = $this->agregarSubasta($nSubasta);
@@ -233,6 +233,163 @@ class Negocios {
 			} else {
 				return $_nSubasta;
 			}			
+	}
+	
+	function datosSubasta($datos) {
+		if (!property_exists($datos,'id')) {
+			return new Error('Error fatal: No se pudo identificar la subasta seleccionada. Por favor contacte al administrador.','El objeto proporcionado para obtener los datos de la subasta no contiene las propiedades necesarias.');
+		}
+		
+		//Obtener subasta
+		$_subasta['id'] = $datos->id;
+		$_subasta = (object)$_subasta;
+		$_subasta = $this->obtenerSubastaPorId($_subasta);
+		if (property_exists($_subasta,'error')) {
+			return new Error('Error fatal: No se pudo identificar la subasta seleccionada. Por favor contacte al administrador.', 'No se encontro una subasta con el id ' . $_subasta->id);
+		}
+		
+		//Obtener articulo
+		$_articulo['id'] = $_subasta->articuloId;
+		$_articulo = (object)$_articulo;
+		$_articulo = $this->obtenerArticuloPorId($_articulo);
+		if (property_exists($_articulo,'error')) {
+			return new Error('Error fatal: No se pudo identificar el articulo de la subasta seleccionada. Por favor contacte al administrador.', 'No se encontro el articulo con el id ' . $_articulo->id);
+		}		
+		
+		//Obtener imagen(es)
+		$_listaImagenes = array();
+		$_imagenes['id'] = $_articulo->id;
+		$_imagenes = (object)$_imagenes;
+		$_imagenes = $this->obtenerImagenPorId($_imagenes);
+		if (!is_array($_imagenes) && property_exists($_imagenes,'error')) {
+			return new Error('Error fatal: No se pudieron encontrar las imagenes de la subasta seleccionada. Por favor contacte al administrador.', 'No se encontraron imagenes para el articulo con el id ' . $_articulo->id);
+		}
+		if (!is_array($_imagenes)) {
+			$_listaImagenes[] = $_imagenes;
+		} else {
+			$_listaImagenes = $_imagenes;
+		}
+		
+		//Obtener tipo_subasta
+		$_tipoSubasta['id'] = $_subasta->tipoSubastaId;
+		$_tipoSubasta = (object)$_tipoSubasta;
+		$_tipoSubasta = $this->obtenerTipoSubastaPorId($_tipoSubasta);
+		if (property_exists($_tipoSubasta,'error')) {
+			return new Error('Error fatal: No se pudo identificar el tipo de subasta de la subasta seleccionada. Por favor contacte al administrador.', 'No se encontro el tipo de subasta con el id ' . $_tipoSubasta->id);
+		}		
+		
+		//Obtener estado_subasta
+		$_estadoSubasta['id'] = $_subasta->estadoId;
+		$_estadoSubasta = (object)$_estadoSubasta;
+		$_estadoSubasta = $this->obtenerEstadoSubastaPorId($_estadoSubasta);
+		if (property_exists($_estadoSubasta,'error')) {
+			return new Error('Error fatal: No se pudo identificar el estado de la subasta seleccionada. Por favor contacte al administrador.', 'No se encontro el estado de la subasta con el id ' . $_estadoSubasta->id);
+		}
+		
+		//Obtener ofertas
+		$_ofertasUsuarios = array();
+		$_listaOfertas = array();
+		$_ofertas['subastaId'] = $_subasta->id;
+		$_ofertas = (object)$_ofertas;
+		$_ofertas = $this->obtenerOfertaPorSubastaId($_ofertas);
+
+		if (!is_array($_ofertas) && !property_exists($_ofertas,'error')) {
+				$_listaOfertas[] = $_ofertas;
+		} else if (is_array($_ofertas)) {	
+			$_listaOfertas= $_ofertas;			
+		}
+		
+		//Obtener usuarios que ofertaron y agregarlos al objeto ofertasUsuarios
+		foreach ($_listaOfertas as $llave => $oferta) {
+			$_tmpUsuario = array();
+			$_tmpUsuario['id'] = $oferta->usuarioId;
+			$_tmpUsuario = (object)$_tmpUsuario;
+			$tmp = $this->obtenerUsuarioPorId($_tmpUsuario);
+			if (!property_exists($tmp,'error')) {
+				$oferta = (array)$oferta;
+				$oferta['nomUsuario'] = $tmp->nomUsuario;
+				$oferta = (object)$oferta;
+				$_ofertasUsuarios[] = $oferta;
+			}
+		}
+		
+		//Formar el objeto datosSubasta
+		$datosSubasta['subasta'] = $_subasta;
+		$datosSubasta['articulo'] = $_articulo;
+		$datosSubasta['imagenes'] = $_listaImagenes;
+		$datosSubasta['tipoSubasta'] = $_tipoSubasta;
+		$datosSubasta['estadoSubasta'] = $_estadoSubasta;
+		$datosSubasta['ofertasUsuarios'] = $_ofertasUsuarios;
+		$datosSubasta = (object)$datosSubasta;
+		return $datosSubasta;
+	}
+	
+	function registroNuevaOferta($datos) {
+		if (!property_exists($datos,'cantidad') ||
+			!property_exists($datos,'nomUsuario') ||
+			!property_exists($datos,'idSubasta')) {
+				return new Error('Es necesario proveer todos los datos en la forma de registro de subasta.','El objeto proporcionado no contiene las propiedades necesarias.');
+		}
+		
+		//Obtener el usuario
+		$_nomUsuario['nomUsuario'] = $datos->nomUsuario;
+		$_nomUsuario = (object)$_nomUsuario;
+		$_usuario = $this->obtenerUsuarioPorNomUsuario($_nomUsuario);
+		if (property_exists($_usuario,'error')) {
+			return new Error('Error fatal: no se pudo obtener el usuario para realizar la oferta. Por favor contacte al administrador.', 'El nombre de usuario' . $_usuario->nomUsuario . ' no se encontro en la base de datos.');
+		}
+	
+		//Obtener la subasta 
+		$_idSubasta['id'] = $datos->idSubasta;
+		$_idSubasta = (object)$_idSubasta;
+		$_subasta = $this->obtenerSubastaPorId($_idSubasta);
+		if (property_exists($_subasta,'error')) {
+			return new Error('Error fatal: no se pudo obtener la subasta para realizar la oferta. Por favor contacte al administrador.', 'El id de subasta ' . $datos->idSubasta . ' no se encontro en la base de datos.');
+		}
+				
+		//Crear objeto oferta y guardarlo
+		$ofertas = $this->obtenerOfertas();
+		$idOferta = $this->obtenerId($ofertas);
+		
+		$_oferta['id'] = $idOferta;
+		$_oferta['usuarioId'] = $_usuario->id;
+		$_oferta['subastaId'] = $_subasta->id;
+		$_oferta['cantidad'] = $datos->cantidad;
+		$_oferta['fecha'] = date('Y-m-d');		
+		$_oferta = (object)$_oferta;
+			
+		$_nOferta = $this->agregarOferta($_oferta);
+		if (property_exists($_nOferta, 'error')) {
+			return new Error('Error al registrar nueva oferta por favor intente de nuevo.', $_nSubasta->obtenerError());
+		} else {
+			return $_nOferta;
+		}
+	}
+
+	function subastasActivas() {
+		//Obtener subastas
+		$_subastas = $this->obtenerSubastas();
+		if (!is_array($_subastas) && property_exists($_subasta,'error')) {
+			return new Error('Error fatal: No se pudieron obtener las subastas. Por favor contacte al administrador.', 'Fallo al tratar de obtener todas las subastas');
+		}
+		
+		//Obtener el id del estado de las subastas activas
+		$estadoSubastas = $this->obtenerEstadoSubastas();
+		$estadoSubastaId = "";
+		foreach ($estadoSubastas as $llave => $valor) {
+			if (strcmp($valor->nombre, 'Activa') == 0) {
+				$estadoSubastaId= $valor->id;
+				break;
+			}
+		}
+		$_subastasActivas = array();
+		foreach ($_subastas as $llave => $subasta) {
+			if ($subasta->estadoSubastaId == $estadoSubastaId) {
+				$_subastasActivas[] = $subasta;
+			}
+		}
+		
+		return $_subastasActivas;
 	}
 	
 	private function obtenerId($arr) {
