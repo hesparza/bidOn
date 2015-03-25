@@ -148,7 +148,7 @@ function UploadFile(file) {
 
 		// start upload
 		xhr.open("POST", CONFIGURACION.get('URL_SUBIR_IMAGENES'), true);
-		xhr.setRequestHeader("X_FILENAME", file.name);
+		xhr.setRequestHeader("X-FILENAME", file.name);
 		xhr.send(file);
 
 	}

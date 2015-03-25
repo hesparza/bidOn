@@ -59,8 +59,8 @@ class Negocios {
 		$_nomUsuario['nomUsuario'] = $datos->nomUsuario;
 		$_nomUsuario = (object)$_nomUsuario;
 		$_usuario = $this->obtenerUsuarioPorNomUsuario($_nomUsuario);
-		if (property_exists($_usuario,'error')) {
-			return new Error('El nombre de usuario ya se encuentra en uso, por favor selecciona uno disinto.', $_usuario->obtenerError());
+		if (!property_exists($_usuario,'error')) {
+			return new Error('El nombre de usuario ya se encuentra en uso, por favor selecciona uno disinto.', 'El nombre de usuario' . $_usuario->nomUsuario . ' ya se encuentra tomado por alguien mas.');
 		} else {
 			//Encontrar el id que representa a un usuario activo
 			$estadoUsuarios = $this->obtenerEstadoUsuarios();
@@ -206,11 +206,17 @@ class Negocios {
 			//$idSubasta = property_exists((object)$subastas, 'error') ? 1 : sizeof((array)$subastas) + 1;
 			$idSubasta = $this->obtenerId($subastas);
 			
+			//Encontrar el id que representa al rol Usuario
+			$usuarios = $this->obtenerUsuarios();
+			//TODO improve this
+			//$usuarioIndefinidoId = $this->obtenerId($usuarios);
+			
+			
 			$nSubasta['id'] = $idSubasta;
 			$nSubasta['tipoSubastaId'] = $subasta->tipoSubasta;
 			$nSubasta['usuarioCreo'] = $_usuario->id;
-			$nSubasta['usuarioGanador'] = 0;
-			$nSubasta['usuarioAprobo'] = 0;
+			$nSubasta['usuarioGanador'] = 11;
+			$nSubasta['usuarioAprobo'] = 11;
 			$nSubasta['articuloId'] = $idArticulo;
 			$nSubasta['categoriaId'] = $subasta->categoria;
 			$nSubasta['estadoId'] = $estadoSubastaId;
@@ -230,18 +236,25 @@ class Negocios {
 	}
 	
 	private function obtenerId($arr) {
-		$id = 0;
-		if (property_exists((object)$arr, 'error')) {
+		if(is_array($arr)) {
+			$id = 0;
+			if (property_exists((object)$arr, 'error')) {
+				$id = 1;
+			} else {
+				foreach ((array)$arr as $llave => $valor) {
+					$tmp = (object)$valor;
+					if ($tmp->id > $id) {
+						$id = $tmp->id;
+					}
+				}
+				$id++;
+			}
+		} else if (property_exists((object)$arr, 'error')) {
 			$id = 1;
 		} else {
-			foreach ((array)$arr as $llave => $valor) {
-				$tmp = (object)$valor;
-				if ($tmp->id > $id) {
-					$id = $tmp->id;
-				}
-			}
-			$id++;
+			$id = 2;
 		}
+
 		return $id;		
 	}
 	

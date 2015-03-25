@@ -2,13 +2,12 @@
 error_reporting ( E_ERROR | E_PARSE );
 session_start ();
 
-$fn = (isset($_SERVER['HTTP_X_FILENAME']) ? $_SERVER['HTTP_X_FILENAME'] : false);
+$fn = (isset(apache_request_headers()['X-Filename']) ? apache_request_headers()['X-Filename'] : false);
 
 if ($fn) {
 	// AJAX call
 	if(isset($_SESSION["nomUsuario"])) {
-		
-		$path = 'imagenes_subastas/' . $_SESSION["nomUsuario"] . '/tmp/';
+		$path = $_SERVER['DOCUMENT_ROOT'] . '/websiteBidOn/imagenes_subastas/' . $_SESSION["nomUsuario"] . '/tmp/';
 		if (!file_exists($path)) {
 			mkdir($path, 0777, true);
 		}
@@ -20,6 +19,12 @@ if ($fn) {
 		exit();		
 	}
 }
+// echo 'Path: ' . $path . '';
+// echo '<br/> $_SESSION["nomUsuario"]= '. $_SESSION["nomUsuario"];
+// echo '<br /> fn= ' .$fn;
+// $asd = apache_request_headers();
+// echo '<br /> apache_request_headers()[X-FILENAME] = ' . $asd['X-Filename'];
+// print_r(apache_request_headers());
 // else {
 
 // 	// form submit
