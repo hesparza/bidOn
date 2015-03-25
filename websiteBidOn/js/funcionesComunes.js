@@ -40,6 +40,14 @@ var FuncionesComunes = function(){
     	}
     }
     
+    this.esNombreArticuloValido = function(str) {
+    	if (str.match('^[a-zA-Z]+[a-zA-Z ]*$') != null) {
+    		return true;
+    	} else {
+    		return false;
+    	}
+    }    
+    
     this.esNombreUsuarioValido = function(str) {
     	if (str.match('^[a-z]+[a-z]*$') != null) {
     		if(str.length < 6){

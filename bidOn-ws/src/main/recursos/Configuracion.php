@@ -7,6 +7,7 @@ class Configuracion {
 	const BASEDEDATOS = "bidon";
 	const PUERTO = 3306;
 	const SOCKET = '/tmp/mysql.sock';
+	const DIR_IMAGENES_SUBASTAS = '/websiteBidOn/imagenes_subastas/';
 }
 
 

@@ -45,13 +45,21 @@ session_start ();
 											</select>
 										</label>
 									</td>
-									<td></td>
+									<td>
+										<label>Tipo de subasta 
+											<select name="tipoSubasta" id="tipoSubasta">
+													<option id="tipoSubastaDefault" value="0">Seleccionar...</option>
+											</select>
+										</label>									
+									</td>
 									<td></td>
 								</tr>
 								<tr>									
 									<td colspan="3">
 									<input type="hidden" id="MAX_FILE_SIZE" name="MAX_FILE_SIZE" value="300000" />
-
+									<?php 									
+									echo '<input type="hidden" id="NOM_USUARIO" name="NOM_USUARIO" value="'.$_SESSION["nomUsuario"].'" />';
+									?>									
 										<div>
 											<label for="fileselect">Seleccione las imagenes:</label>
 											<input type="file" id="fileselect" name="fileselect[]" multiple="multiple" />
@@ -70,10 +78,10 @@ session_start ();
 								</tr>
 								<tr>
 									<td><label>Fecha de inicio <input name="fechainicio"
-											type="date" id="fechainicio" value="DD/MM/AAAA">
+											type="date" id="fechainicio" value="">
 									</label></td>
 									<td><label>Fecha de finalización <input name="fechafin"
-											type="date" id="fechafin" value="DD/MM/AAAA">
+											type="date" id="fechafin" value="">
 									</label></td>
 									<td>&nbsp;</td>
 								</tr>

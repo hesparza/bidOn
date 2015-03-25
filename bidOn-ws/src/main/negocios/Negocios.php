@@ -2,6 +2,8 @@
 include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/acceso_datos/MantenimientoDeDatos.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/acceso_datos/RecuperacionDeDatos.php';
 include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/modelo/Error.php';
+include_once $_SERVER['DOCUMENT_ROOT'] . '/bidOn-ws/src/main/recursos/Configuracion.php';
+date_default_timezone_set('America/Mexico_City');
 class Negocios {
 	private $_mantenimientoDeDatos;
 	private $_recuperacionDeDatos;
@@ -15,7 +17,7 @@ class Negocios {
 	 */
 	function inicioSesion($usuario) {
 		if (!property_exists($usuario, 'nomUsuario') || !property_exists($usuario, 'contrasena')) {
-			return "Es necesario proveer el nombre de usuario y contraseña";
+			return new Error('Es necesario proveer el nombre de usuario y contraseña','El objeto proporcionado debe de contener las propiedades nomUsuario y contrasena');
 		}
 		$_usuario = $this->obtenerUsuarioPorNomUsuario($usuario);
 		if (property_exists($_usuario, 'error')) {
@@ -51,7 +53,7 @@ class Negocios {
 			!property_exists($datos,'correo') ||
 			!property_exists($datos,'nomUsuario') ||
 			!property_exists($datos,'contrasena')) {
-				return "Es necesario proveer todos los datos en la forma de registro.";
+				return new Error('Es necesario proveer todos los datos en la forma de registro.','El objeto proporcionado no contiene las propiedades necesarias.');
 			}
 		//Checar si el nombre de usuario no existe
 		$_nomUsuario['nomUsuario'] = $datos->nomUsuario;
@@ -97,12 +99,150 @@ class Negocios {
 			$datos = (object)$datos;
 			
 			$_usuario = $this->agregarUsuario($datos);
-			if (is_string($_usuario) ) {
-				return new Error('Error al registrar nuevo usuario.', $_usuario);
+			
+			if (property_exists($_usuario, 'error')) {
+				return new Error('Error al registrar nuevo usuario.', $_usuario->obtenerError());
 			} else {
 				return $_usuario;
 			}
 		}			
+	}
+	
+	function RegistroNuevaSubasta($subasta) {
+		if (!property_exists($subasta,'articulo') ||
+			!property_exists($subasta,'precio') ||
+			!property_exists($subasta,'cantidad') ||
+			!property_exists($subasta,'fechainicio') ||
+			!property_exists($subasta,'fechafin') ||
+			!property_exists($subasta,'descripcion') ||
+			!property_exists($subasta,'imagenes') ||
+			!property_exists($subasta,'categoria') ||
+			!property_exists($subasta,'nomUsuario') ||
+			!property_exists($subasta,'tipoSubasta')) {
+				return new Error('Es necesario proveer todos los datos en la forma de registro de subasta.','El objeto proporcionado no contiene las propiedades necesarias.');
+			}
+			
+			//Validar si las imagenes se subieron correctamente
+			foreach ($subasta->imagenes as $llave => $valor) {
+				$imagen = $_SERVER['DOCUMENT_ROOT'] . Configuracion::DIR_IMAGENES_SUBASTAS . $subasta->nomUsuario . '/tmp/' . $valor;
+				if(!file_exists($imagen)) {
+					return new Error('Las imagenes no se cargaron correctamente en el servidor, por favor intenta de nuevo.','La imagen ' . $valor . ' no se se encuentra en ' . $imagen);
+				}
+			}
+			
+			//Crear objeto articulo y guardarlo
+			$articulos = $this->obtenerArticulos();
+			$idArticulo = $this->obtenerId($articulos);
+		
+			 //= property_exists((object)$articulos, 'error') ? 1 : sizeof((array)$articulos) + 1;
+			settype($subasta->precio, 'float');
+			settype($subasta->cantidad, 'int');
+
+			$articulo['id'] = $idArticulo;
+			$articulo['nombre'] = $subasta->articulo;
+			$articulo['descripcion'] = $subasta->descripcion;
+			$articulo['precio'] = $subasta->precio;
+			$articulo['cantidad'] = $subasta->cantidad;
+			$articulo['fechaCreacion'] = date('Y-m-d');
+			$articulo['fechaModificacion'] = date('Y-m-d');
+			$articulo = (object)$articulo;
+
+			$_articulo = $this->agregarArticulo($articulo);
+			if (property_exists($_articulo, 'error')) {
+				return new Error('Error al registrar nuevo articulo.', $_articulo->obtenerError());
+			}
+			
+			//Mover imagenes a la nueva ruta
+			foreach ($subasta->imagenes as $llave => $valor) {
+				$imagen = $_SERVER['DOCUMENT_ROOT'] . Configuracion::DIR_IMAGENES_SUBASTAS . $subasta->nomUsuario . '/tmp/' . $valor;
+				$nuevaRuta = $_SERVER['DOCUMENT_ROOT'] . Configuracion::DIR_IMAGENES_SUBASTAS . $subasta->nomUsuario . '/' . $idArticulo . '/';
+				$nuevaImagen = $nuevaRuta. $valor;
+				if (!file_exists($nuevaRuta)) {
+					mkdir($nuevaRuta, 0777, true);
+				}
+				if(!rename($imagen, $nuevaImagen)) {
+					return new Error('Erro fatal: no se encontraron las imagenes en el servidor. Por favor contacte al administrador.','Fallo al mover la imagen localizada en: ' . $imagen . ' a la ruta: ' . $nuevaImagen);
+				}
+			}
+			
+			//Crear objetos imagen y guardarlos
+			$imagenes = $this->obtenerImagenes();
+			$idImagen = $this->obtenerId($imagenes);
+			//$idImagen = property_exists((object)$imagenes, 'error') ? 1 : sizeof((array)$imagenes) + 1;
+			
+			$arrImagen['id'] = $idImagen;
+			$arrImagen['articuloId'] = $idArticulo;
+			$arrImagen['descripcion'] = $subasta->descripcion;
+			foreach ($subasta->imagenes as $llave => $valor) {
+				$nuevaImagen = $_SERVER['DOCUMENT_ROOT'] . Configuracion::DIR_IMAGENES_SUBASTAS . $subasta->nomUsuario . '/' . $idArticulo . '/' . $valor;
+				$arrImagen['nombre'] = $valor;
+				$arrImagen['ruta'] = $nuevaImagen;
+				$objTemp = (object)$arrImagen;
+				$_objTemp = $this->agregarImagen($objTemp);
+				if (property_exists($_objTemp, 'error')) {
+					return new Error('Error al registrar nueva imagen.', $_objTemp->obtenerError());
+				}
+				$arrImagen['id'] = ++$idImagen;
+			}
+
+			//Crear objeto subasta y guardarlo
+			$usuario['nomUsuario'] = $subasta->nomUsuario;
+			$usuario = (object)$usuario;
+			$_usuario = $this->obtenerUsuarioPorNomUsuario($usuario);
+			if (property_exists($_usuario, 'error')) {
+				return new Error('Error fatal: no se pudo obtener el usuario que esta creando la subasta. Por favor contacte a su administrador.', $_usuario->obtenerError());
+			}
+			
+			$estadoSubastas = $this->obtenerEstadoSubastas();
+			$estadoSubastaId = "";
+			foreach ($estadoSubastas as $llave => $valor) {
+				if (strcmp($valor->nombre, 'Pendiente') == 0) {
+					$estadoSubastaId= $valor->id;
+					break;
+				}
+			}
+			
+			$subastas = $this->obtenerSubastas();
+			//$idSubasta = property_exists((object)$subastas, 'error') ? 1 : sizeof((array)$subastas) + 1;
+			$idSubasta = $this->obtenerId($subastas);
+			
+			$nSubasta['id'] = $idSubasta;
+			$nSubasta['tipoSubastaId'] = $subasta->tipoSubasta;
+			$nSubasta['usuarioCreo'] = $_usuario->id;
+			$nSubasta['usuarioGanador'] = 0;
+			$nSubasta['usuarioAprobo'] = 0;
+			$nSubasta['articuloId'] = $idArticulo;
+			$nSubasta['categoriaId'] = $subasta->categoria;
+			$nSubasta['estadoId'] = $estadoSubastaId;
+			$nSubasta['fechaInicio'] = $subasta->fechainicio;
+			$nSubasta['fechaFin'] = $subasta->fechafin;
+			$nSubasta['fechaAprobacion'] = '00-00-00';
+			$nSubasta['fechaCreacion'] = date('Y-m-d');;
+			$nSubasta['fechaModificacion'] = date('Y-m-d');;
+			$nSubasta = (object)$nSubasta;
+			
+			$_nSubasta = $this->agregarSubasta($nSubasta);
+			if (property_exists($_nSubasta, 'error')) {
+				return new Error('Error al registrar nueva subasta por favor intente de nuevo.', $_nSubasta->obtenerError());
+			} else {
+				return $_nSubasta;
+			}			
+	}
+	
+	private function obtenerId($arr) {
+		$id = 0;
+		if (property_exists((object)$arr, 'error')) {
+			$id = 1;
+		} else {
+			foreach ((array)$arr as $llave => $valor) {
+				$tmp = (object)$valor;
+				if ($tmp->id > $id) {
+					$id = $tmp->id;
+				}
+			}
+			$id++;
+		}
+		return $id;		
 	}
 	
 	/**

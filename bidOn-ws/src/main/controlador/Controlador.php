@@ -156,13 +156,13 @@ class Controlador {
 			case 'Pago':
 			case 'Rol':
 			case 'Subasta':
-			case 'Tarjeta_Credito':
-			case 'Tarjeta_Credito_Usuario':
-			case 'Tipo_Envio':
-			case 'Tipo_Pago':
-			case 'Tipo_Subasta':
+			case 'TarjetaCredito':
+			case 'TarjetaCredito_Usuario':
+			case 'TipoEnvio':
+			case 'TipoPago':
+			case 'TipoSubasta':
 			case 'Usuario':
-			case 'Usuario_Direccion':
+			case 'UsuarioDireccion':
 	        	$nombreMetodo = $this->_prefijo . $this->_parametros[1] . $this->complementarNombre();
 // 	        	echo '$nombreMetodo ->-> ' .$nombreMetodo . ' <-<- ';
 	        	if(method_exists($this->_negocios, $nombreMetodo)) {
@@ -200,7 +200,8 @@ class Controlador {
 				}				
 				break;
 			case 'InicioSesion':
-			case 'RegistroNuevoUsuario':				
+			case 'RegistroNuevoUsuario':
+			case 'RegistroNuevaSubasta':				
 				$nombreMetodo =  lcfirst($this->_parametros[1]);
 // 				echo '$nombreMetodo ->-> ' .$nombreMetodo . ' <-<- ';
 				if(method_exists($this->_negocios, $nombreMetodo)) {

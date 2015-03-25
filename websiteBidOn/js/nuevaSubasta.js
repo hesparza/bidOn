@@ -1,7 +1,10 @@
 //variables globales
 var imagenes = [];
 var categoria = "";
+var tipoSubasta = "";
+var nomUsuario = "";
 var fc = new FuncionesComunes();
+
 var registroUsuario = function(obj) {
 	if ( typeof obj === 'object') {
 		if (obj.datos.hasOwnProperty('error')) {
@@ -200,8 +203,29 @@ function cargarCategorias() {
 	}
 }
 
+function cargarTipoSubastas() {
+	obj = fc.llamadaWS({},CONFIGURACION.get('TIPO_SUBASTAS'),'GET', false, function(e) {}, falloLlamada);
+	if ( typeof obj === 'object') {
+		if (obj.datos.hasOwnProperty('error')) {
+			alert(obj.datos.mensaje);
+			console.log("Mensaje de error: " + obj.datos.mensaje + ", error reportado: " + obj.datos.error);
+		} else {
+			obj.datos.forEach(function(tipoSubasta) {
+			    $("#tipoSubasta").append( $('<option></option>').val(tipoSubasta.id).html(tipoSubasta.nombre));
+			});
+		}		
+	} else {
+		alert("Error al cargar los tipos de subasta. Por favor contacte al administrador");
+		return false;
+	}
+}
+
 $(document).on('change', '#categoria', function(e) {
 	categoria = this.options[e.target.selectedIndex].value;
+});
+
+$(document).on('change', '#tipoSubasta', function(e) {
+	tipoSubasta = this.options[e.target.selectedIndex].value;
 });
 
 var registroSubasta = function(obj) {
@@ -211,11 +235,11 @@ var registroSubasta = function(obj) {
 			console.log("Mensaje de error: " + obj.datos.mensaje + ", error reportado: " + obj.datos.error);
 		} else {
 			fc.borrarHtml("comentarios");
-			fc.insertarHeaderHtml("comentarios", 2, "Tu subasta ha quedado registrada en nuestro sistema, un administrador la va a revisar y aprobar a la brevedad. <u>" + obj.datos.nomUsuario + "</u> ha quedado registrado satisfactoriamente.");
+			fc.insertarHeaderHtml("comentarios", 2, "Tu subasta ha quedado registrada en nuestro sistema, un administrador la va a revisar y aprobar a la brevedad posible.");
 			fc.insertarHeaderHtml("comentarios", 2, "Haz click <a href=\"index.php\">aqui</a> para regresar al inicio.");			
 		} 		
 	} else {
-		alert("Error al cargar datos de inicio de sesión. Por favor contacte al administrador");
+		alert("Error al cargar datos de la nueva subasta. Por favor contacte al administrador");
 		return false;
 	}	
 }
@@ -227,11 +251,18 @@ $(document).ready(function() {
 	if(!compatibleParaImagenes) {
 		alert('Lo sentimos, tu explorador web no es compatible para subir imagenes. \n Por favor intenta con uno diferente.');
 	}
+	//Cargar variable que contiene el usuario
+	nomUsuario = $("#NOM_USUARIO").val();
+	if (nomUsuario == "" || nomUsuario === 'undefined') {
+		alert("Error fatal: no se encontro un usuario valido en la sesion. Por favor contacte al administrador.");
+		return false;
+	}
 	//Inicializar todo lo necesario para el manejo de imagenes
 	Init();
 	//Cargar categorias
 	cargarCategorias();
-	
+	//Cargar tipos de subasta
+	cargarTipoSubastas();
 	$("#FormaNuevaSubasta").submit(function() {        
 		if (!fc.todosLosCamposLlenos([$("#articulo").val(),
 		                              $("#precio").val(),
@@ -244,7 +275,7 @@ $(document).ready(function() {
 			return false;
 		}
 		
-		if (!fc.esNombreValido($("#articulo").val())) {
+		if (!fc.esNombreArticuloValido($("#articulo").val())) {
 			alert('El nombre no es correcto, solo puede contener letras.');
 			return false;
 		}
@@ -264,16 +295,22 @@ $(document).ready(function() {
 			alert('Por favor seleccione una categoria valida.');
 			return false;
 		}
+		if (tipoSubasta == "" || tipoSubasta == 0) {
+			alert('Por favor seleccione un tipo de subasta valido.');
+			return false;
+		}
 		console.log('FormaNuevaSubasta esta correcta');
-		var datos = {nombre:$("#articulo").val(),
-					apellidoP:$("#precio").val(),
-					apellidoM:$("#cantidad").val(),
-					correo:$("#fechainicio").val(),
-					nomUsuario:$("#fechafin").val(),
+		var datos = {articulo:$("#articulo").val(),
+					precio:$("#precio").val(),
+					cantidad:$("#cantidad").val(),
+					fechainicio:$("#fechainicio").val(),
+					fechafin:$("#fechafin").val(),
 					descripcion:$("#descripcion").val(),
 					imagenes:imagenes,
-					categoria:categoria};
-		fc.llamadaWS(datos,CONFIGURACION.get('REGISTRO_NUEVO_USUARIO'),'POST', false, registroSubasta, falloLlamada);
+					categoria:categoria,
+					tipoSubasta:tipoSubasta,
+					nomUsuario:nomUsuario};
+		fc.llamadaWS(datos,CONFIGURACION.get('REGISTRO_NUEVA_SUBASTA'),'POST', false, registroSubasta, falloLlamada);
 		return false;
 	});	
 	//return false;
