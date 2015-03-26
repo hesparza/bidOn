@@ -384,8 +384,30 @@ class Negocios {
 		}
 		$_subastasActivas = array();
 		foreach ($_subastas as $llave => $subasta) {
-			if ($subasta->estadoSubastaId == $estadoSubastaId) {
-				$_subastasActivas[] = $subasta;
+			if ($subasta->estadoId == $estadoSubastaId) {				
+				//Traer el articulo de la subasta
+				$_articulo = array();
+				$_articulo['id'] = $subasta->id;
+				$_articulo = $this->obtenerArticuloPorId((object)$_articulo);
+				if (!property_exists($_articulo, 'error')) {					
+					//Traer las imagenes del articulo
+					$_listaImagenes = array();
+					$_imagenes['id'] = $_articulo->id;
+					$_imagenes = (object)$_imagenes;
+					$_imagenes = $this->obtenerImagenPorId($_imagenes);										
+					if (is_array($_imagenes) || !property_exists($_imagenes,'error')) {
+						if(is_array($_imagenes)) {
+							$_listaImagenes = $_imagenes;
+						} else {
+							$_listaImagenes[] = $_imagenes;
+						}
+						$subasta = (array)$subasta;
+						$subasta['articulo'] = $_articulo;
+						$subasta['imagenes'] = $_listaImagenes;
+						$subasta = (object)$subasta;
+						$_subastasActivas[] = $subasta;
+					} 
+				}			
 			}
 		}
 		

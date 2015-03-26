@@ -6,21 +6,6 @@ var estadoSubasta;
 var ofertasUsuarios;
 var fc = new FuncionesComunes();
 
-var registroUsuario = function(obj) {
-	if ( typeof obj === 'object') {
-		if (obj.datos.hasOwnProperty('error')) {
-			alert(obj.datos.mensaje);
-			console.log("Mensaje de error: " + obj.datos.mensaje + ", error reportado: " + obj.datos.error);
-		} else {
-			var fc = new FuncionesComunes();
-			fc.borrarHtml("userZone");
-			fc.insertarHeaderHtml("userZone", 2, "Gracias " + obj.datos.nombre + "!");
-			fc.insertarHeaderHtml("userZone", 2, "Tu usuario <u>" + obj.datos.nomUsuario + "</u> ha quedado registrado satisfactoriamente.");
-			fc.insertarHeaderHtml("userZone", 2, "Haz click <a href=\"inicioSesion.php\">aqui</a> para comenzar a subastar.");
-		}			
-	}	
-}
-
 var falloLlamada = function(obj) {
 	alert("Error al llamar el servicio web: " + obj);
 }

@@ -11,6 +11,7 @@ var CONFIGURACION = (function() {
 		'REGISTRO_NUEVA_SUBASTA' : SERVIDOR_ACTUAL_WS + 'RegistroNuevaSubasta',
 		'DATOS_SUBASTA' : SERVIDOR_ACTUAL_WS + 'DatosSubasta',
 		'REGISTRO_NUEVA_OFERTA' : SERVIDOR_ACTUAL_WS + 'RegistroNuevaOferta',
+		'SUBASTAS_ACTIVAS' : SERVIDOR_ACTUAL_WS + 'SubastasActivas',
 		'ROL' : SERVIDOR_ACTUAL_WS + 'Rol',
 		'CATEGORIAS' : SERVIDOR_ACTUAL_WS + 'Categorias',
 		'TIPO_SUBASTAS' : SERVIDOR_ACTUAL_WS + 'TipoSubastas',
