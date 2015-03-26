@@ -41,6 +41,18 @@ ul li {
 	padding: 5px;
 	outline: none;
 }
+.btnEnviar {
+  clear: both;
+  display: block;
+  position: relative;
+  width: 278px;
+  height: 35px;
+  background: #FF9900;
+  border: none;
+  outline: none;
+  color: #FFFFFF;
+  cursor: pointer;	
+}
 .slidesjs-navigation {
 	position:absolute;
 	z-index: 10;

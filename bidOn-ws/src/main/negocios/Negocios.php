@@ -174,7 +174,7 @@ class Negocios {
 			$arrImagen['articuloId'] = $idArticulo;
 			$arrImagen['descripcion'] = $subasta->descripcion;
 			foreach ($subasta->imagenes as $llave => $valor) {
-				$nuevaImagen = $_SERVER['DOCUMENT_ROOT'] . Configuracion::DIR_IMAGENES_SUBASTAS . $subasta->nomUsuario . '/' . $idArticulo . '/' . $valor;
+				$nuevaImagen = Configuracion::DIR_IMAGENES_SUBASTAS . $subasta->nomUsuario . '/' . $idArticulo . '/' . $valor;
 				$arrImagen['nombre'] = $valor;
 				$arrImagen['ruta'] = $nuevaImagen;
 				$objTemp = (object)$arrImagen;
@@ -258,9 +258,9 @@ class Negocios {
 		
 		//Obtener imagen(es)
 		$_listaImagenes = array();
-		$_imagenes['id'] = $_articulo->id;
+		$_imagenes['articuloId'] = $_articulo->id;
 		$_imagenes = (object)$_imagenes;
-		$_imagenes = $this->obtenerImagenPorId($_imagenes);
+		$_imagenes = $this->obtenerImagenPorArticuloId($_imagenes);
 		if (!is_array($_imagenes) && property_exists($_imagenes,'error')) {
 			return new Error('Error fatal: No se pudieron encontrar las imagenes de la subasta seleccionada. Por favor contacte al administrador.', 'No se encontraron imagenes para el articulo con el id ' . $_articulo->id);
 		}
@@ -393,9 +393,9 @@ class Negocios {
 					//Traer las imagenes del articulo
 					$_listaImagenes = array();
 					$_imagenes = array();
-					$_imagenes['id'] = $_articulo->id;
+					$_imagenes['articuloId'] = $_articulo->id;
 					$_imagenes = (object)$_imagenes;
-					$_imagenes = $this->obtenerImagenPorId($_imagenes);										
+					$_imagenes = $this->obtenerImagenPorArticuloId($_imagenes);										
 					if (is_array($_imagenes) || !property_exists($_imagenes,'error')) {
 						if(is_array($_imagenes)) {
 							$_listaImagenes = $_imagenes;

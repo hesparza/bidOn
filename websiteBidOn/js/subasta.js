@@ -46,8 +46,9 @@ function cargarImagenes() {
 }
 
 function cargarDatos() {
+	$("#nombre").empty().append("<label>Nombre: " + articulo.nombre + "<label>");
 	$("#estado").empty().append("<label>Estado: " + estadoSubasta.nombre + "<label>");
-	$("#precioInicial").empty().append("<label>Precio inicial: " + articulo.precio + "<label>");
+	$("#precioInicial").empty().append("<label>Precio inicial: $" + articulo.precio + "<label>");
 	$("#tipo").empty().append("<label>Tipo de subasta: " + tipoSubasta.nombre + "<label>");
 	$("#cantidad").empty().append("<label>Cantidad: " + articulo.cantidad + "<label>");
 	$("#fechainicio").empty().append("<label>Fecha de inicio: " + subasta.fechaInicio + "<label>");

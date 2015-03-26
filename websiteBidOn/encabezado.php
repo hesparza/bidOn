@@ -6,7 +6,6 @@ session_start();
     <div class="header"> <a href="#"><img src="img/logoBidOn.png" hspace="15" vspace="10" border="0" /></a>
       <ul class="mainmenu">
         <li><a href="index.php">Inicio</a></li>
-        <li><a href="#">Categorías</a></li>
         <?php 
 	        if(isset($_SESSION["nomUsuario"])) {
 	      		if (isset($_SESSION["rol"]) && isset($_SESSION["estadoUsuario"]) &&

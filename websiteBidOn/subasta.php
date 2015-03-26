@@ -27,12 +27,11 @@ echo '<input type="hidden" id="NOM_USUARIO" name="NOM_USUARIO" value="'.$_SESSIO
 	<?php include_once $_SERVER['DOCUMENT_ROOT'] . '/websiteBidOn/encabezado.php'; ?>
   <div class="wrapper-content">  	
   	<div class="content">
-					<h2>Nueva subasta</h2>
+					<h2 id="nombre">Nueva subasta</h2>
 					<div class="comentarios" id="comentarios">
 							<table width="100%" border="0" cellspacing="10" cellpadding="0">
 								<tr>
 									<td>
-										<label id="nombre"></label>
 									</td>
 									<td>
 									</td>
@@ -87,9 +86,9 @@ echo '<input type="hidden" id="NOM_USUARIO" name="NOM_USUARIO" value="'.$_SESSIO
 								<tr>
 									<td>
 										<label><input type="text" name="cantidadOferta" id="cantidadOferta"></label>
-										<button type="button" id="btnOfertar">Ofertar</button>
-									</td>
-									<td>										
+									</td>								
+									<td>
+										<button type="button" id="btnOfertar" class="btnEnviar">Ofertar</button>
 									</td>
 								</tr>
 							</table>
