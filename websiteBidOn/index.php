@@ -26,46 +26,9 @@ session_start();
       <output id="listaSubastas">
       
       </output>
-<!--       <ul class="destacadas" id="listaSubastas"> -->
-<!--         <li> <img src="img/productPreview01.jpg" width="200" height="200"> -->
-<!--           <h3><a href="#">Smart TV 4K</a></h3> -->
-<!--           <p>Ahora puedes hacer mucho más con tu televisor. Con todas las funciones esenciales de un Smart TV, tu televisor Samsung te brinda acceso a todo tipo de posibilidades de entretenimiento directamente en tu sala de estar. <span class="contador">4 días, 3 horas para finalizar</span> </p> -->
-<!--           <p class="oferta"> <span class="ahora">$150</span> <span class="antes">$200</span> <span class="ahorro">Ahorra 25%</span> </p> -->
-<!--         </li> -->
-<!--         <li><img src="img/productPreview01.jpg" alt="" width="200" height="200"> -->
-<!--           <h3><a href="#">Smart TV 4K</a></h3> -->
-<!--           <p>Ahora puedes hacer mucho más con tu televisor. Con todas las funciones esenciales de un Smart TV, tu televisor Samsung te brinda acceso a todo tipo de posibilidades de entretenimiento directamente en tu sala de estar. <span class="contador">4 días, 3 horas para finalizar</span> </p> -->
-<!--           <p class="oferta"> <span class="ahora">$150</span> <span class="antes">$200</span> <span class="ahorro">Ahorra 25%</span> </p> -->
-<!--         </li> -->
-<!--         <li><img src="img/productPreview01.jpg" alt="" width="200" height="200"> -->
-<!--           <h3><a href="#">Smart TV 4K</a></h3> -->
-<!--           <p>Ahora puedes hacer mucho más con tu televisor. Con todas las funciones esenciales de un Smart TV, tu televisor Samsung te brinda acceso a todo tipo de posibilidades de entretenimiento directamente en tu sala de estar. <span class="contador">4 días, 3 horas para finalizar</span> </p> -->
-<!--           <p class="oferta"> <span class="ahora">$150</span> <span class="antes">$200</span> <span class="ahorro">Ahorra 25%</span> </p> -->
-<!--         </li> -->
-<!--         <li> <img src="img/productPreview02.jpg" width="200" height="200"> -->
-<!--           <h3><a href="#">Sistema de sonido</a></h3> -->
-<!--           <p>Disfrute de películas en Blu-ray Disc ™ 3D en Full HD 1080p. También es compatible con estándar películas Blu-ray Disc de alta definición.<span class="contador">4 días, 3 horas para finalizar</span> </p> -->
-<!--           <p class="oferta"> <span class="ahora">$150</span> <span class="antes">$200</span> <span class="ahorro">Ahorra 25%</span> </p> -->
-<!--         </li> -->
-<!--         <li> <img src="img/productPreview02.jpg" width="200" height="200"> -->
-<!--           <h3><a href="#">Sistema de sonido</a></h3> -->
-<!--           <p>Disfrute de películas en Blu-ray Disc ™ 3D en Full HD 1080p. También es compatible con estándar películas Blu-ray Disc de alta definición.<span class="contador">4 días, 3 horas para finalizar</span> </p> -->
-<!--           <p class="oferta"> <span class="ahora">$150</span> <span class="antes">$200</span> <span class="ahorro">Ahorra 25%</span> </p> -->
-<!--         </li> -->
-<!--         <li> <img src="img/productPreview02.jpg" width="200" height="200"> -->
-<!--           <h3><a href="#">Sistema de sonido</a></h3> -->
-<!--           <p>Disfrute de películas en Blu-ray Disc ™ 3D en Full HD 1080p. También es compatible con estándar películas Blu-ray Disc de alta definición.<span class="contador">4 días, 3 horas para finalizar</span> </p> -->
-<!--           <p class="oferta"> <span class="ahora">$150</span> <span class="antes">$200</span> <span class="ahorro">Ahorra 25%</span> </p> -->
-<!--         </li> -->
-<!--         <li> <img src="img/productPreview02.jpg" width="200" height="200"> -->
-<!--           <h3><a href="#">Sistema de sonido</a></h3> -->
-<!--           <p>Disfrute de películas en Blu-ray Disc ™ 3D en Full HD 1080p. También es compatible con estándar películas Blu-ray Disc de alta definición.<span class="contador">4 días, 3 horas para finalizar</span> </p> -->
-<!--           <p class="oferta"> <span class="ahora">$150</span> <span class="antes">$200</span> <span class="ahorro">Ahorra 25%</span> </p> -->
-<!--         </li> -->
-<!--       </ul> -->
     </div>
   </div>
-<?php include_once $_SERVER['DOCUMENT_ROOT'] . '/websiteBidOn/pie.php'; ?>
+  <?php include_once $_SERVER['DOCUMENT_ROOT'] . '/websiteBidOn/pie.php'; ?>
 </div>
 </body>
 </html>

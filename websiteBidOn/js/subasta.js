@@ -74,10 +74,10 @@ function validarPosibleOfertar() {
 		$("#btnOfertar").prop('disabled', true);
 		$("#btnOfertar").hide();
 		$("#cantidadOferta").hide();
-		if ($("#NOM_USUARIO").val() === "") {
-			alert("La sesion no es valida, por favor inicie sesion nuevamente");
-			window.location.replace('index.php');
-		}
+//		if ($("#NOM_USUARIO").val() === "") {
+//			alert("La sesion no es valida, por favor inicie sesion nuevamente");
+//			window.location.replace('index.php');
+//		}
 		if (estadoSubasta.nombre != 'Activa'){
 			$("#textoOfertar").empty().append("<b>No es posible ofertar ya que la subasta no esta activa</b>");	
 		}

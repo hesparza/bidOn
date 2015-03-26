@@ -415,6 +415,215 @@ class Negocios {
 		return $_subastasActivas;
 	}
 	
+	function misSubastas($datos) {
+		if (!property_exists($datos,'nomUsuario')) {
+			return new Error('Es necesario proveer todos los datos en la forma de registro de subasta.','El objeto proporcionado no contiene las propiedades necesarias.');
+		}
+
+		//Obtener el usuario
+		$_usuario['nomUsuario'] = $datos->nomUsuario;
+		$_usuario = (object)$_usuario;
+		$_usuario = $this->obtenerUsuarioPorNomUsuario($_usuario);
+		if (property_exists($_usuario,'error')) {
+			return new Error('Error fatal: no se pudo obtener el usuario. Por favor contacte al administrador.', 'El nombre de usuario' . $_usuario->nomUsuario . ' no se encontro en la base de datos.');
+		}
+		
+		//Obtener subastas creadas por el usuario
+		$_listaSubastasUsuario = array();
+		$_subastas['usuarioCreo'] = $_usuario->id;
+		$_subastas = (object)$_subastas;
+		$_subastas = $this->obtenerSubastaPorUsuarioCreo($_subastas);
+		if (!is_array($_subastas) && !property_exists($_subastas,'error')) {
+			$_listaSubastasUsuario[] = $_subastas;
+		} else if (is_array($_subastas)) {
+			$_listaSubastasUsuario= $_subastas;
+		}
+		
+		//Obtener ofertas para el usuario
+		$_listaOfertas = array();
+		$_ofertas['usuarioId'] = $_usuario->id;
+		$_ofertas = (object)$_ofertas;
+		$_ofertas = $this->obtenerOfertaPorUsuarioId($_ofertas);
+		if (!is_array($_ofertas) && !property_exists($_ofertas,'error')) {
+			$_listaOfertas[] = $_ofertas;
+		} else if (is_array($_ofertas)) {
+			$_listaOfertas= $_ofertas;
+		}
+		
+		//Lista de ofertas depurada
+		$_listaOfertasDepurada = array();
+		$agregar = false;
+		foreach ($_listaOfertas as $llave => $valor) {
+			if (sizeof($_listaOfertasDepurada) > 0) {
+				$agregar = true;
+				foreach ($_listaOfertasDepurada as $ll =>$v )
+				{
+					if ($v->subastaId == $valor->subastaId) {
+						$agregar = false;
+						//Tomar la cantidad mas alta
+						if ($v->cantidad < $valor->cantidad) {
+							$v->cantidad = $valor->cantidad;
+						}
+					}
+				}
+				if ($agregar) {
+					$_listaOfertasDepurada[] = $valor;
+				}
+			} else {
+				$_listaOfertasDepurada[] = $valor;
+			}
+		}		
+		
+		//Obtener las subastas en las que ha ofertado
+		$_listaSubastasOferta = array();
+		foreach ($_listaOfertasDepurada as $llave => $oferta) {
+			$_tmpSubasta = array();
+			$_tmpSubasta['id'] = $oferta->subastaId;
+			$_tmpSubasta = (object)$_tmpSubasta;
+			$_tmpSubasta = $this->obtenerSubastaPorId($_tmpSubasta);
+			if (!property_exists($_tmpSubasta,'error')) {				
+				$_listaSubastasOferta[] = $_tmpSubasta;
+			}
+		}
+		
+		//Determinar si gano alguna subasta en la que oferto
+		//Obtener las subastas finalizadas
+		$_listaSubastasFinalizadas = array();
+		foreach ($_listaSubastasOferta as $llave => $valor) {
+			$fechaActual = date('Y-m-d h:i:s');
+			$fechaFin = $valor->fechaFin;
+			$segundos = $fechaFin - $fechaActual;
+			$diasRestantes = $segundos/86400;			
+			$valor = (array)$valor;
+			$valor['finalizada'] = $diasRestantes < 0 ? true : false; 
+			$valor = (object)$valor;			
+			if ($diasRestantes < 0) {
+				$_listaSubastasFinalizadas[] = $valor;
+			}
+		}
+		
+		//Recorrer subastas finalizadas, obtener sus ofertas y determinar si se ganaron o no
+		foreach ($_listaSubastasFinalizadas as $llave => $valor) {
+			$_tmpOfertas= array();
+			$_tmpOfertas['subastaId'] = $valor->id;
+			$_tmpOfertas = (object)$_tmpOfertas;
+			$_tmpOfertas = $this->obtenerOfertaPorSubastaId($_tmpOfertas);
+			if (!is_array($_tmpOfertas) && !property_exists($_tmpOfertas,'error')) {
+				foreach ($_listaOfertasDepurada as $l => $v) {
+					if ($_tmpOfertas->subastaId == $v->subastaId) {
+						$tmpOferta = $v;
+						$tmpOferta = (array)$tmpOferta;
+						$tmpOferta['gano'] = $_tmpOfertas->cantidad < $v->cantidad ? true : false;
+						$tmpOferta = (object)$tmpOferta;
+						$_listaOfertasDepurada[$l] = $tmpOferta;
+						foreach ($_listaSubastasOferta as $i => $sub) {
+							if ($v->subastaId == $sub->id) {
+								$tmp = (array)$sub;
+								$tmp['gano'] = $_tmpOfertas->cantidad < $v->cantidad ? true : false;
+								$tmp = (object)$tmp;
+								$_listaSubastasOferta[$i] = $tmp;
+							}
+						}
+					}
+				}
+			} elseif (is_array($_tmpOfertas)) {
+				$_tmpMaxCantidad = 0;
+				foreach ($_tmpOfertas as $ll => $vv) {
+					$_tmpMaxCantidad = $vv->cantidad > $_tmpMaxCantidad ? $vv->cantidad : $_tmpMaxCantidad;
+				}
+				foreach ($_listaOfertasDepurada as $l => $v) {
+					if ($valor->id == $v->subastaId) {
+						$tmpOferta = $v;
+						$tmpOferta = (array)$tmpOferta;
+						$tmpOferta['gano'] = $_tmpMaxCantidad < $v->cantidad ? true : false;
+						$tmpOferta = (object)$tmpOferta;
+						$_listaOfertasDepurada[$l] = $tmpOferta;
+						foreach ($_listaSubastasOferta as $i => $sub) {
+							if ($v->subastaId == $sub->id) {
+								$tmp = (array)$sub;
+								$tmp['gano'] = $_tmpOfertas->cantidad < $v->cantidad ? true : false;
+								$tmp = (object)$tmp;
+								$_listaSubastasOferta[$i] = $tmp; 
+							}
+						}												
+					}
+				}
+			}		
+		}
+		
+		//Agregar Estado Usuario a las listas
+		$_estadosSubasta = array();
+		$_listaEstadosUsuario = $this->obtenerEstadoUsuarios();
+		foreach ($_listaEstadosUsuario as $llave => $valor) {
+			$_estadosSubasta[$valor->id] = $valor->nombre;
+		}
+		foreach ($_listaSubastasUsuario as $llave => $valor) {
+			$tmp = (array)$valor;
+			$tmp['estadoSubasta'] = $_estadosSubasta[$valor->estadoId];
+			$tmp = (object)$tmp;
+			$_listaSubastasUsuario[$llave] = $tmp;
+		}
+		foreach ($_listaSubastasOferta as $llave => $valor) {
+			$tmp = (array)$valor;
+			$tmp['estadoSubasta'] = $_estadosSubasta[$valor->estadoId];
+			$tmp = (object)$tmp;
+			$_listaSubastasOferta[$llave] = $tmp;
+		}
+		
+		//Agregar Tipo Subasta a las listas
+		$_tiposSubasta = array();
+		$_listaTiposSubasta= $this->obtenerTipoSubastas();
+		foreach ($_listaTiposSubasta as $llave => $valor) {
+			$_tiposSubasta[$valor->id] = $valor->nombre;
+		}
+		foreach ($_listaSubastasUsuario as $llave => $valor) {
+			$tmp = (array)$valor;
+			$tmp['tipoSubasta'] = $_tiposSubasta[$valor->tipoSubastaId];
+			$tmp = (object)$tmp;
+			$_listaSubastasUsuario[$llave] = $tmp;
+		}
+		foreach ($_listaSubastasOferta as $llave => $valor) {
+			$tmp = (array)$valor;
+			$tmp['tipoSubasta'] = $_tiposSubasta[$valor->tipoSubastaId];
+			$tmp = (object)$tmp;
+			$_listaSubastasOferta[$llave] = $tmp;
+		}
+		
+		//Agregar articulo a las listas
+		foreach ($_listaSubastasUsuario as $llave => $valor) {
+			//Obtener articulo
+			$_articulo = array();
+			$_articulo['id'] = $valor->articuloId;
+			$_articulo = (object)$_articulo;
+			$_articulo = $this->obtenerArticuloPorId($_articulo);
+			if (!property_exists($_articulo,'error')) {
+				$tmp = (array)$valor;
+				$tmp['articulo'] = $_articulo;
+				$tmp = (object)$tmp;
+				$_listaSubastasUsuario[$llave] = $tmp;								
+			}
+		}
+		foreach ($_listaSubastasOferta as $llave => $valor) {
+			//Obtener articulo
+			$_articulo = array();
+			$_articulo['id'] = $valor->articuloId;
+			$_articulo = (object)$_articulo;
+			$_articulo = $this->obtenerArticuloPorId($_articulo);
+			if (!property_exists($_articulo,'error')) {
+				$tmp = (array)$valor;
+				$tmp['articulo'] = $_articulo;
+				$tmp = (object)$tmp;
+				$_listaSubastasOferta[$llave] = $tmp;								
+			}
+		}		
+			
+		$_subastasUsuario = array();
+		$_subastasUsuario['listaSubastasUsuario'] = $_listaSubastasUsuario;
+		$_subastasUsuario['listaSubastasOferta'] = $_listaSubastasOferta;
+		$_subastasUsuario = (object)$_subastasUsuario;
+		return $_subastasUsuario;
+	}
+	
 	private function obtenerId($arr) {
 		if(is_array($arr)) {
 			$id = 0;
