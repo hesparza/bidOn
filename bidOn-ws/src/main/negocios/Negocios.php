@@ -514,7 +514,7 @@ class Negocios {
 		}
 	
 		return $_subastasInactivas;
-	}	
+	}
 
 	function desactivarSubasta($datos) {
 		if (!property_exists($datos,'id')) {
@@ -662,69 +662,77 @@ class Negocios {
 		}
 		
 		//Determinar si gano alguna subasta en la que oferto
+		foreach ($_listaSubastasOferta as $i => $sub) {
+				$tmp = (array)$sub;
+				$tmp['gano'] = $sub->usuarioGanador == $_usuario->id ? true : false;
+				$tmp = (object)$tmp;
+				$_listaSubastasOferta[$i] = $tmp;
+		}		
+		
+		//Determinar si gano alguna subasta en la que oferto
 		//Obtener las subastas finalizadas
-		$_listaSubastasFinalizadas = array();
-		foreach ($_listaSubastasOferta as $llave => $valor) {
-			$fechaActual = date('Y-m-d h:i:s');
-			$fechaFin = $valor->fechaFin;
-			$segundos = $fechaFin - $fechaActual;
-			$diasRestantes = $segundos/86400;			
-			$valor = (array)$valor;
-			$valor['finalizada'] = $diasRestantes < 0 ? true : false; 
-			$valor = (object)$valor;			
-			if ($diasRestantes < 0) {
-				$_listaSubastasFinalizadas[] = $valor;
-			}
-		}
+// 		$_listaSubastasFinalizadas = array();
+// 		foreach ($_listaSubastasOferta as $llave => $valor) {
+// 			$fechaActual = date('Y-m-d h:i:s');
+// 			$fechaFin = $valor->fechaFin;
+// 			$segundos = $fechaFin - $fechaActual;
+// 			$diasRestantes = $segundos/86400;			
+// 			$valor = (array)$valor;
+// 			$valor['finalizada'] = $diasRestantes < 0 ? true : false; 
+// 			$valor = (object)$valor;			
+// 			if ($diasRestantes < 0) {
+// 				$_listaSubastasFinalizadas[] = $valor;
+// 			}
+// 		}
 		
 		//Recorrer subastas finalizadas, obtener sus ofertas y determinar si se ganaron o no
-		foreach ($_listaSubastasFinalizadas as $llave => $valor) {
-			$_tmpOfertas= array();
-			$_tmpOfertas['subastaId'] = $valor->id;
-			$_tmpOfertas = (object)$_tmpOfertas;
-			$_tmpOfertas = $this->obtenerOfertaPorSubastaId($_tmpOfertas);
-			if (!is_array($_tmpOfertas) && !property_exists($_tmpOfertas,'error')) {
-				foreach ($_listaOfertasDepurada as $l => $v) {
-					if ($_tmpOfertas->subastaId == $v->subastaId) {
-						$tmpOferta = $v;
-						$tmpOferta = (array)$tmpOferta;
-						$tmpOferta['gano'] = $_tmpOfertas->cantidad < $v->cantidad ? true : false;
-						$tmpOferta = (object)$tmpOferta;
-						$_listaOfertasDepurada[$l] = $tmpOferta;
-						foreach ($_listaSubastasOferta as $i => $sub) {
-							if ($v->subastaId == $sub->id) {
-								$tmp = (array)$sub;
-								$tmp['gano'] = $_tmpOfertas->cantidad < $v->cantidad ? true : false;
-								$tmp = (object)$tmp;
-								$_listaSubastasOferta[$i] = $tmp;
-							}
-						}
-					}
-				}
-			} elseif (is_array($_tmpOfertas)) {
-				$_tmpMaxCantidad = 0;
-				foreach ($_tmpOfertas as $ll => $vv) {
-					$_tmpMaxCantidad = $vv->cantidad > $_tmpMaxCantidad ? $vv->cantidad : $_tmpMaxCantidad;
-				}
-				foreach ($_listaOfertasDepurada as $l => $v) {
-					if ($valor->id == $v->subastaId) {
-						$tmpOferta = $v;
-						$tmpOferta = (array)$tmpOferta;
-						$tmpOferta['gano'] = $_tmpMaxCantidad < $v->cantidad ? true : false;
-						$tmpOferta = (object)$tmpOferta;
-						$_listaOfertasDepurada[$l] = $tmpOferta;
-						foreach ($_listaSubastasOferta as $i => $sub) {
-							if ($v->subastaId == $sub->id) {
-								$tmp = (array)$sub;
-								$tmp['gano'] = $_tmpOfertas->cantidad < $v->cantidad ? true : false;
-								$tmp = (object)$tmp;
-								$_listaSubastasOferta[$i] = $tmp; 
-							}
-						}												
-					}
-				}
-			}		
-		}
+// 		foreach ($_listaSubastasFinalizadas as $llave => $valor) {
+// 			$_tmpOfertas= array();
+// 			$_tmpOfertas['subastaId'] = $valor->id;
+// 			$_tmpOfertas = (object)$_tmpOfertas;
+// 			$_tmpOfertas = $this->obtenerOfertaPorSubastaId($_tmpOfertas);
+// 			if (!is_array($_tmpOfertas) && !property_exists($_tmpOfertas,'error')) {
+// 				foreach ($_listaOfertasDepurada as $l => $v) {
+// 					if ($_tmpOfertas->subastaId == $v->subastaId) {
+// 						$tmpOferta = $v;
+// 						$tmpOferta = (array)$tmpOferta;
+// 						$tmpOferta['gano'] = $_tmpOfertas->cantidad < $v->cantidad ? true : false;
+// 						$tmpOferta = (object)$tmpOferta;
+// 						$_listaOfertasDepurada[$l] = $tmpOferta;
+// 						foreach ($_listaSubastasOferta as $i => $sub) {
+// 							if ($v->subastaId == $sub->id) {
+// 								$tmp = (array)$sub;
+// 								$tmp['gano'] = $_tmpOfertas->cantidad < $v->cantidad ? true : false;
+// 								$tmp = (object)$tmp;
+// 								$_listaSubastasOferta[$i] = $tmp;
+// 							}
+// 						}
+// 					}
+// 				}
+// 			} elseif (is_array($_tmpOfertas)) {
+// 				$_tmpMaxCantidad = 0;
+// 				foreach ($_tmpOfertas as $ll => $vv) {
+// 					$_tmpMaxCantidad = $vv->cantidad > $_tmpMaxCantidad ? $vv->cantidad : $_tmpMaxCantidad;
+// 				}
+// 				foreach ($_listaOfertasDepurada as $l => $v) {
+// 					if ($valor->id == $v->subastaId) {
+// 						$tmpOferta = $v;
+// 						$tmpOferta = (array)$tmpOferta;
+// 						$tmpOferta['gano'] = $_tmpMaxCantidad < $v->cantidad ? true : false;
+// 						$tmpOferta = (object)$tmpOferta;
+// 						$_listaOfertasDepurada[$l] = $tmpOferta;
+// 						foreach ($_listaSubastasOferta as $i => $sub) {
+// 							if ($v->subastaId == $sub->id) {
+// 								$tmp = (array)$sub;
+// 								$tmp['gano'] = $_tmpOfertas->cantidad < $v->cantidad ? true : false;
+// 								$tmp = (object)$tmp;
+// 								$_listaSubastasOferta[$i] = $tmp; 
+// 							}
+// 						}												
+// 					}
+// 				}
+// 			}		
+// 		}
 		
 		//Agregar Estado Usuario a las listas
 		$_estadosSubasta = array();
@@ -799,6 +807,104 @@ class Negocios {
 		return $_subastasUsuario;
 	}
 	
+	/**
+	 * Busca ganadores y actualiza las subastas con su id
+	 * @return Error|multitype:StdClass
+	 */
+	function actualizarGanadores() {
+		//Obtener subastas
+		$_subastas = $this->obtenerSubastas();
+		if (!is_array($_subastas) && property_exists($_subasta,'error')) {
+			return new Error('Error fatal: No se pudieron obtener las subastas. Por favor contacte al administrador.', 'Fallo al tratar de obtener todas las subastas');
+		}
+	
+		//Obtener el id del estado de las subastas activas
+		$estadoSubastas = $this->obtenerEstadoSubastas();
+		$estadoSubastaId = "";
+		foreach ($estadoSubastas as $llave => $valor) {
+			if (strcmp($valor->nombre, 'Activa') == 0) {
+				$estadoSubastaId= $valor->id;
+				break;
+			}
+		}
+		//Obtener subastas activas	
+		$_subastasActivas = array();
+		foreach ($_subastas as $llave => $subasta) {
+			if ($subasta->estadoId == $estadoSubastaId) {
+				$_subastasActivas[] = $subasta;									
+			}
+		}
+		
+		//Obtener las subastas finalizadas
+		$_listaSubastasFinalizadas = array();
+		foreach ($_subastasActivas as $llave => $valor) {
+			$fechaActual = strtotime(date('Y-m-d h:i:s'));
+			$fechaFin = strtotime(date($valor->fechaFin));
+			$segundos = $fechaFin - $fechaActual;
+			$diasRestantes = $segundos/86400;
+			if ($diasRestantes < 0) {
+				$_listaSubastasFinalizadas[] = $valor;
+			}
+		}
+		
+		//Obtener ganador para cada subasta
+		$_listaGanadores = array();
+		foreach ($_listaSubastasFinalizadas as $llave => $valor) {
+			$_tmpofertas = $this->obtenerOfertaPorSubastaId($valor->id);
+			if (!is_array($_tmpofertas) && !property_exists($_articulo,'error')) {
+				$_listaGanadores[$valor->id] = $_tmpofertas->usuarioId; 
+			} elseif (is_array($_tmpofertas)) {
+				$_tmpMaxCant = 0;
+				$_tmpGanadorId = "";
+				foreach ($_tmpofertas as $l => $v) {
+					if ($v->cantidad > $_tmpMaxCant) {
+						$_tmpMaxCant = $v->cantidad;
+						$_tmpGanadorId = $v->usuarioId;
+					}
+				}
+				if (strcmp($_tmpGanadorId, "") != 0) {
+					$_listaGanadores[$valor->id] = $_tmpGanadorId;
+					$_tmpGanadorId = "";
+				}				
+			}
+		}
+		
+		//Obtener el id del estado de las subastas inactivas
+		$estadoSubastas = $this->obtenerEstadoSubastas();
+		$estadoSubastaId = "";
+		foreach ($estadoSubastas as $llave => $valor) {
+			if (strcmp($valor->nombre, 'Inactiva') == 0) {
+				$estadoSubastaId= $valor->id;
+				break;
+			}
+		}		
+		if (strcmp($estadoSubastaId, "") == 0) {
+			return new Error("Error Fatal: No se pudo obtener el id para las subastas inactivas","No se pudo obtener el id para el estado de subasta: Inactiva");
+		}
+				
+		//Actualizar las subastas con su ganador y ponerlas como inactivas
+		$_listaSubastasActualizadas = array();
+		foreach ($_listaGanadores as $llave => $valor) {
+			$_tmpsubasta = array();
+			$_tmpsubasta['id'] = $llave;
+			$_tmpsubasta = (object)$_tmpsubasta;
+			$_tmpsubasta = $this->obtenerSubastaPorId($_tmpsubasta);
+			if (!property_exists($_tmpsubasta,'error')) {
+				$_tmpsubasta = (array)$_tmpsubasta;
+				$_tmpsubasta['usuarioGanador'] = $valor;
+				$_tmpsubasta['estadoId'] = $estadoSubastaId;
+				$_tmpsubasta['fechaModificacion'] = date('Y-m-d h:i:s');
+				$_tmpsubasta = (object)$_tmpsubasta;
+				$_tmpsubasta = $this->editarSubasta($_tmpsubasta);
+				if (!property_exists($_tmpsubasta,'error')) {
+					$_listaSubastasActualizadas = $_tmpsubasta;
+				}				
+			}
+			
+		}	
+		return $_listaSubastasActualizadas;
+	}
+			
 	private function obtenerId($arr) {
 		if(is_array($arr)) {
 			$id = 0;
