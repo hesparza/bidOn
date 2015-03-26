@@ -46,9 +46,12 @@ verificarSubastaDesactivada = function(obj) {
 			alert(obj.datos.mensaje);
 			console.log("Mensaje de error: " + obj.datos.mensaje + ", error reportado: " + obj.datos.error);
 		} else {			
-			alert("Subasta activada exitosamente");
+			alert("Subasta desactivada exitosamente");
 			$("#estadoSubasta"+obj.datos.id).empty();
 			$("#estadoSubasta"+obj.datos.id).append("Inactiva");
+			$("#btnSubasta"+obj.datos.id).empty();
+			$("#btnSubasta"+obj.datos.id).append("Activar");
+			$("#btnSubasta"+obj.datos.id).prop('class', 'btnActivar');
 		}			
 	}		
 }
@@ -62,6 +65,9 @@ verificarSubastaActivada = function(obj) {
 			alert("Subasta activada exitosamente");
 			$("#estadoSubasta"+obj.datos.id).empty();
 			$("#estadoSubasta"+obj.datos.id).append("Activa");
+			$("#btnSubasta"+obj.datos.id).empty();
+			$("#btnSubasta"+obj.datos.id).append("Deshabilitar");
+			$("#btnSubasta"+obj.datos.id).prop('class', 'btnDesactivar');
 		}			
 	}		
 }
@@ -77,7 +83,7 @@ function cargarDatos() {
 				'<td><output id="estadoSubasta' + subasta.id + '">' +subasta.estadoSubasta +'</output></td>' +
 				'<td>' + subasta.fechaFin +'</td>' +
 				'<td>'+
-					'<button type="button" value="' + subasta.id + '" id="subasta' + subasta.id +'" class="btnDesactivar">Deshabilitar</button>'+
+					'<button type="button" value="' + subasta.id + '" id="btnSubasta' + subasta.id +'" class="btnDesactivar">Deshabilitar</button>'+
 				'</td>' +
 				'</tr>');
 	});
@@ -88,7 +94,7 @@ function cargarDatos() {
 				'<td><output id="estadoSubasta' + subasta.id + '">' +subasta.estadoSubasta +'</output></td>' +
 				'<td>' + subasta.fechaFin +'</td>' +
 				'<td>'+
-					'<button type="button" value="' + subasta.id + '" id="subasta' + subasta.id + '" class="btnActivar">Activar</button>'+
+					'<button type="button" value="' + subasta.id + '" id="btnSubasta' + subasta.id + '" class="btnActivar">Activar</button>'+
 				'</td>' +
 				'</tr>');				
 	});
@@ -99,10 +105,10 @@ function cargarDatos() {
 				'<td><output id="estadoSubasta' + subasta.id + '">' +subasta.estadoSubasta +'</output></td>' +
 				'<td>' + subasta.fechaFin +'</td>' +
 				'<td>'+
-					'<button type="button" value="' + subasta.id + '" id="subasta' + subasta.id + '" class="btnActivar">Activar</button>'+
+					'<button type="button" value="' + subasta.id + '" id="btnSubasta' + subasta.id + '" class="btnActivar">Activar</button>'+
 				'</td>' +
 				'</tr>');				
-	});	
+	});
 }
 
 
@@ -111,6 +117,16 @@ function validarUsuario() {
 		alert("La sesion no es valida, por favor inicie sesion nuevamente");
 		window.location.replace('index.php');
 	}
+}
+
+function registrarEventos() {
+	$("body").on('click','.btnDesactivar', function() {
+		fc.llamadaWS({id:$(this).attr("value")},CONFIGURACION.get('DESACTIVAR_SUBASTA'),'POST', false, verificarSubastaDesactivada, falloLlamada);
+	});
+
+	$("body").on('click','.btnActivar', function() {
+		fc.llamadaWS({id:$(this).attr("value")},CONFIGURACION.get('ACTIVAR_SUBASTA'),'POST', false, verificarSubastaActivada, falloLlamada);
+	});
 }
 
 /**
@@ -123,13 +139,5 @@ $(document).ready(function() {
 	fc.llamadaWS({},CONFIGURACION.get('SUBASTAS_ACTIVAS'),'POST', false, cargarSubastasActivas, falloLlamada);
 	fc.llamadaWS({},CONFIGURACION.get('SUBASTAS_INACTIVAS'),'POST', false, cargarSubastasInactivas, falloLlamada);	
 	cargarDatos();
-	
-	
-    $('.btnDesactivar').click(function() {
-    	fc.llamadaWS({id:$(this).attr("value")},CONFIGURACION.get('DESACTIVAR_SUBASTA'),'POST', false, verificarSubastaDesactivada, falloLlamada);
-    });
-    
-    $('.btnActivar').click(function() {
-    	fc.llamadaWS({id:$(this).attr("value")},CONFIGURACION.get('ACTIVAR_SUBASTA'),'POST', false, verificarSubastaActivada, falloLlamada);
-    });
+	registrarEventos();
 });
