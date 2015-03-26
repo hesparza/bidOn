@@ -15,6 +15,7 @@ var cargarSubastasActivas = function(obj) {
 			subastas = obj.datos;
 			var contador = 0;
 			var ids = 0;
+			var fechaActual = new Date();
 			$("#listaSubastas").append("<ul class=\"destacadas\" id=\"subastas" + ids + "\"></ul>");
 			for (i = 0; i < subastas.length; i++) {
 				subasta = subastas[i];
@@ -26,12 +27,18 @@ var cargarSubastasActivas = function(obj) {
 					}
 					$("#listaSubastas").append("<ul class=\"destacadas\" id=\"subastas" + ids + "\"></ul>");
 				}
+				var fechaFin = new Date(subasta.fechaFin.replace(/-/g,'/'));
+				var fechaResta = Math.abs(fechaFin.getTime() - fechaActual.getTime());
+				var fechaRestaDias = Math.ceil(fechaResta / (1000 * 3600 * 24));
+				if (fechaRestaDias < 0) {
+					fechaResta = 0;
+				}
 				$("#subastas" + ids).append("" +
 						"<li> <img src=\""+subasta.imagenes[0].ruta+"\" width=\"200\" height=\"200\">" +
 						"<h3><a href=\"subasta.php?id="+ subasta.id +"\">"+subasta.articulo.nombre+"</a></h3>" +
 						"<p>" + subasta.articulo.descripcion +
-						"<span class=\"contador\">4 días, 3 horas para finalizar</span> </p>" +
-						"<p class=\"oferta\"> <span class=\"ahora\">$150</span> <span class=\"antes\">$200</span> <span class=\"ahorro\">Ahorra 25%</span> </p>" +
+						"<span class=\"contador\">" + fechaRestaDias + " días para finalizar</span> </p>" +
+						"<p class=\"oferta\"> <span class=\"ahora\">$"+subasta.articulo.precio+"</span></p>" +
 						"</li>"
 				);
 				contador++;				

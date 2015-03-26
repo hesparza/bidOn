@@ -392,6 +392,7 @@ class Negocios {
 				if (!property_exists($_articulo, 'error')) {					
 					//Traer las imagenes del articulo
 					$_listaImagenes = array();
+					$_imagenes = array();
 					$_imagenes['id'] = $_articulo->id;
 					$_imagenes = (object)$_imagenes;
 					$_imagenes = $this->obtenerImagenPorId($_imagenes);										
