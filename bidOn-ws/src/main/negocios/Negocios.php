@@ -405,6 +405,7 @@ class Negocios {
 						$subasta = (array)$subasta;
 						$subasta['articulo'] = $_articulo;
 						$subasta['imagenes'] = $_listaImagenes;
+						$subasta['estadoSubasta'] = 'Activa';
 						$subasta = (object)$subasta;
 						$_subastasActivas[] = $subasta;
 					} 
@@ -413,6 +414,180 @@ class Negocios {
 		}
 		
 		return $_subastasActivas;
+	}
+	
+	function subastasPendientes() {
+		//Obtener subastas
+		$_subastas = $this->obtenerSubastas();
+		if (!is_array($_subastas) && property_exists($_subasta,'error')) {
+			return new Error('Error fatal: No se pudieron obtener las subastas. Por favor contacte al administrador.', 'Fallo al tratar de obtener todas las subastas');
+		}
+	
+		//Obtener el id del estado de las subastas activas
+		$estadoSubastas = $this->obtenerEstadoSubastas();
+		$estadoSubastaId = "";
+		foreach ($estadoSubastas as $llave => $valor) {
+			if (strcmp($valor->nombre, 'Pendiente') == 0) {
+				$estadoSubastaId= $valor->id;
+				break;
+			}
+		}
+		$_subastasPendientes = array();
+		foreach ($_subastas as $llave => $subasta) {
+			if ($subasta->estadoId == $estadoSubastaId) {
+				//Traer el articulo de la subasta
+				$_articulo = array();
+				$_articulo['id'] = $subasta->id;
+				$_articulo = $this->obtenerArticuloPorId((object)$_articulo);
+				if (!property_exists($_articulo, 'error')) {
+					//Traer las imagenes del articulo
+					$_listaImagenes = array();
+					$_imagenes = array();
+					$_imagenes['articuloId'] = $_articulo->id;
+					$_imagenes = (object)$_imagenes;
+					$_imagenes = $this->obtenerImagenPorArticuloId($_imagenes);
+					if (is_array($_imagenes) || !property_exists($_imagenes,'error')) {
+						if(is_array($_imagenes)) {
+							$_listaImagenes = $_imagenes;
+						} else {
+							$_listaImagenes[] = $_imagenes;
+						}
+						$subasta = (array)$subasta;
+						$subasta['articulo'] = $_articulo;
+						$subasta['imagenes'] = $_listaImagenes;
+						$subasta['estadoSubasta'] = 'Pendiente';
+						$subasta = (object)$subasta;
+						$_subastasPendientes[] = $subasta;
+					}
+				}
+			}
+		}
+	
+		return $_subastasPendientes;
+	}
+	
+	function subastasInactivas() {
+		//Obtener subastas
+		$_subastas = $this->obtenerSubastas();
+		if (!is_array($_subastas) && property_exists($_subasta,'error')) {
+			return new Error('Error fatal: No se pudieron obtener las subastas. Por favor contacte al administrador.', 'Fallo al tratar de obtener todas las subastas');
+		}
+	
+		//Obtener el id del estado de las subastas activas
+		$estadoSubastas = $this->obtenerEstadoSubastas();
+		$estadoSubastaId = "";
+		foreach ($estadoSubastas as $llave => $valor) {
+			if (strcmp($valor->nombre, 'Inactiva') == 0) {
+				$estadoSubastaId= $valor->id;
+				break;
+			}
+		}
+		$_subastasInactivas = array();
+		foreach ($_subastas as $llave => $subasta) {
+			if ($subasta->estadoId == $estadoSubastaId) {
+				//Traer el articulo de la subasta
+				$_articulo = array();
+				$_articulo['id'] = $subasta->id;
+				$_articulo = $this->obtenerArticuloPorId((object)$_articulo);
+				if (!property_exists($_articulo, 'error')) {
+					//Traer las imagenes del articulo
+					$_listaImagenes = array();
+					$_imagenes = array();
+					$_imagenes['articuloId'] = $_articulo->id;
+					$_imagenes = (object)$_imagenes;
+					$_imagenes = $this->obtenerImagenPorArticuloId($_imagenes);
+					if (is_array($_imagenes) || !property_exists($_imagenes,'error')) {
+						if(is_array($_imagenes)) {
+							$_listaImagenes = $_imagenes;
+						} else {
+							$_listaImagenes[] = $_imagenes;
+						}
+						$subasta = (array)$subasta;
+						$subasta['articulo'] = $_articulo;
+						$subasta['imagenes'] = $_listaImagenes;
+						$subasta['estadoSubasta'] = 'Inactiva';
+						$subasta = (object)$subasta;
+						$_subastasInactivas[] = $subasta;
+					}
+				}
+			}
+		}
+	
+		return $_subastasInactivas;
+	}	
+
+	function desactivarSubasta($datos) {
+		if (!property_exists($datos,'id')) {
+			return new Error('Error fatal: No se pudo identificar la subasta seleccionada. Por favor contacte al administrador.','El objeto proporcionado para obtener los datos de la subasta no contiene las propiedades necesarias.');
+		}
+		
+		//Obtener subasta
+		$_subasta['id'] = $datos->id;
+		$_subasta = (object)$_subasta;
+		$_subasta = $this->obtenerSubastaPorId($_subasta);
+		if (property_exists($_subasta,'error')) {
+			return new Error('Error fatal: No se pudo identificar la subasta seleccionada. Por favor contacte al administrador.', 'No se encontro una subasta con el id ' . $_subasta->id);
+		}
+		
+		//Actualizar estado subasta
+		$estadoSubastas = $this->obtenerEstadoSubastas();
+		$estadoSubastaId = "";
+		foreach ($estadoSubastas as $llave => $valor) {
+			if (strcmp($valor->nombre, 'Inactiva') == 0) {
+				$estadoSubastaId= $valor->id;
+				break;
+			}
+		}
+		if (strcmp($estadoSubastaId, "") == 0) {
+			return new Error('Error fatal: no se pudo obtener el estado de la subasta inactiva.Por favor contacte al administrador.', 'No se pudo encontrar un id para el estado de subasta Inactiva');
+		}
+		
+		$_subasta = (array)$_subasta;
+		$_subasta['estadoId'] = $estadoSubastaId;
+		$_subasta = (object)$_subasta;
+
+		$resultado = $this->editarSubasta($_subasta);
+		if (property_exists($resultado, 'error')) {
+			return new Error('Error al intentar desactivar la subasta. Por favor contacte al administrador.', $resultado->obtenerError());
+		}
+		return $resultado;
+	}
+	
+	function activarSubasta($datos) {
+		if (!property_exists($datos,'id')) {
+			return new Error('Error fatal: No se pudo identificar la subasta seleccionada. Por favor contacte al administrador.','El objeto proporcionado para obtener los datos de la subasta no contiene las propiedades necesarias.');
+		}
+	
+		//Obtener subasta
+		$_subasta['id'] = $datos->id;
+		$_subasta = (object)$_subasta;
+		$_subasta = $this->obtenerSubastaPorId($_subasta);
+		if (property_exists($_subasta,'error')) {
+			return new Error('Error fatal: No se pudo identificar la subasta seleccionada. Por favor contacte al administrador.', 'No se encontro una subasta con el id ' . $_subasta->id);
+		}
+	
+		//Actualizar estado subasta
+		$estadoSubastas = $this->obtenerEstadoSubastas();
+		$estadoSubastaId = "";
+		foreach ($estadoSubastas as $llave => $valor) {
+			if (strcmp($valor->nombre, 'Activa') == 0) {
+				$estadoSubastaId= $valor->id;
+				break;
+			}
+		}
+		if (strcmp($estadoSubastaId, "") == 0) {
+			return new Error('Error fatal: no se pudo obtener el estado de la subasta inactiva.Por favor contacte al administrador.', 'No se pudo encontrar un id para el estado de subasta Inactiva');
+		}
+	
+		$_subasta = (array)$_subasta;
+		$_subasta['estadoId'] = $estadoSubastaId;
+		$_subasta = (object)$_subasta;
+	
+		$resultado = $this->editarSubasta($_subasta);
+		if (property_exists($resultado, 'error')) {
+			return new Error('Error al intentar activar la subasta. Por favor contacte al administrador.', $resultado->obtenerError());
+		}
+		return $resultado;
 	}
 	
 	function misSubastas($datos) {

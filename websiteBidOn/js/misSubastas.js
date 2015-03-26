@@ -43,7 +43,7 @@ function cargarDatos() {
 			estado = 'Inactiva';
 		}
 		$('#misSubastas > tbody:last').append('<tr>' +
-				'<td><a href="subasta.php?'+ subasta.id + '">' + subasta.articulo.nombre +'</a></td>' +
+				'<td><a href="subasta.php?id='+ subasta.id + '">' + subasta.articulo.nombre +'</a></td>' +
 				'<td>' + estado +'</td>' +
 				'<td>' + subasta.tipoSubasta +'</td>' +
 				'<td> ' + relacion + ' </td>' +
