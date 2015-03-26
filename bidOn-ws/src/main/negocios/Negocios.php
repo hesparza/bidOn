@@ -89,10 +89,10 @@ class Negocios {
 			}			
 			
 			$usuarios = $this->obtenerUsuarios();
-			$usuarios = (array)$usuarios;
-			
+			$idUsuario = $this->obtenerId($usuarios);
+
 			$datos = (array)$datos;
-			$datos['id'] = sizeof($usuarios) + 1;
+			$datos['id'] = $idUsuario;
 			$datos['estadoUsuarioId'] = $estadoUsuarioId;
 			$datos['rolId'] = $rolId;
 			$datos['reputacion'] = 0.0;
