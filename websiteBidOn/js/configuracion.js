@@ -17,6 +17,7 @@ var CONFIGURACION = (function() {
 		'DESACTIVAR_SUBASTA' : SERVIDOR_ACTUAL_WS + 'DesactivarSubasta',
 		'SUBASTAS_PENDIENTES' : SERVIDOR_ACTUAL_WS + 'SubastasPendientes',
 		'MIS_SUBASTAS' : SERVIDOR_ACTUAL_WS + 'MisSubastas',
+		'REALIZAR_PAGO' : SERVIDOR_ACTUAL_WS + 'RealizarPago',
 		'ROL' : SERVIDOR_ACTUAL_WS + 'Rol',
 		'CATEGORIAS' : SERVIDOR_ACTUAL_WS + 'Categorias',
 		'TIPO_SUBASTAS' : SERVIDOR_ACTUAL_WS + 'TipoSubastas',

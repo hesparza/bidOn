@@ -904,6 +904,166 @@ class Negocios {
 		}	
 		return $_listaSubastasActualizadas;
 	}
+	
+	//TODO mejorar este metodo
+	function realizarPago($datos) {
+		if (!property_exists($datos,'nombre') ||
+			!property_exists($datos,'numeroTarjeta') ||
+			!property_exists($datos,'cvv') ||
+			!property_exists($datos,'calle') ||
+			!property_exists($datos,'numeroExterior') ||
+			!property_exists($datos,'numeroInterior') ||
+			!property_exists($datos,'colonia') ||
+			!property_exists($datos,'codigoPostal') ||
+			!property_exists($datos,'ciudad') ||
+			!property_exists($datos,'estado') ||
+			!property_exists($datos,'pais') ||
+			!property_exists($datos, 'fechaexpiracion') ||
+			!property_exists($datos,'nomUsuario') ||
+			!property_exists($datos,'idSubasta')) {
+				return new Error('Es necesario proveer todos los datos en la forma de registro de subasta.','El objeto proporcionado no contiene las propiedades necesarias.');
+			}
+			
+		//Obtener el usuario
+		$_nomUsuario['nomUsuario'] = $datos->nomUsuario;
+		$_nomUsuario = (object)$_nomUsuario;
+		$_usuario = $this->obtenerUsuarioPorNomUsuario($_nomUsuario);
+		if (property_exists($_usuario,'error')) {
+			return new Error('Error fatal: no se pudo obtener el usuario para realizar la oferta. Por favor contacte al administrador.', 'El nombre de usuario' . $_usuario->nomUsuario . ' no se encontro en la base de datos.');
+		}
+		//Registrar direccion
+		//Crear objeto oferta y guardarlo
+		$_idDireccion = $this->obtenerDirecciones();
+		$_idDireccion = $this->obtenerId($_idDireccion);
+		$_direccion = array();
+		$_direccion['id'] = $_idDireccion;
+		$_direccion['usuarioId'] = $_usuario->id;
+		$_direccion['calle'] = $datos->calle;
+		$_direccion['numeroExt'] = $datos->numeroExterior;
+		$_direccion['numeroInt'] = $datos->numeroInterior;
+		$_direccion['colonia'] = $datos->colonia;
+		$_direccion['codigoPostal'] = $datos->codigoPostal;
+		$_direccion['ciudad'] = $datos->ciudad;
+		$_direccion['estado'] = $datos->estado;
+		$_direccion['pais'] = $datos->pais;
+		$_direccion = (object)$_direccion;
+		$_direccion = $this->agregarDireccion($_direccion);
+		if (property_exists($_direccion,'error')) {
+			return new Error('Error al guardar los datos de la dirección, por favor asegurese de haberlos introducido de manera correcta.', $_direccion->error);
+		}
+		
+		$_direccionId= $this->obtenerDirecciones();
+		$_direccionId = $this->obtenerId($_direccionId);
+		$_direccionId = $_direccionId > 1 ? --$_direccionId : $_direccionId;
+		
+		//Registrar usuario-direccion
+		//TODO corregir la incertidumbre de traer el id de la direccion incorrecto
+		$_usuarioDireccion =  array();
+		$_usuarioDireccion['usuarioId'] = $_usuario->id;
+		$_usuarioDireccion['direccionId'] = $_direccionId;
+		$_usuarioDireccion = (object)$_usuarioDireccion;
+		$_usuarioDireccion = $this->agregarUsuarioDireccion($_usuarioDireccion);
+		if (property_exists($_usuarioDireccion,'error')) {
+			return new Error('Error fatal: error al intentar guardar el objeto usuario-direccion. Por favor contacte al administrador.', $_usuarioDireccion->error);
+		}
+		
+		//Registrar tarjeta de credito
+		$_idTarjetaCredito = $this->obtenerTarjetaCreditos();
+		$_idTarjetaCredito = $this->obtenerId($_idTarjetaCredito);
+		$_idTarjetaCredito = $_idTarjetaCredito > 1 ? --$_idTarjetaCredito : $_idTarjetaCredito;
+
+		$_tarjetaCredito = array();
+		$_tarjetaCredito['id'] = $_idTarjetaCredito;
+		$_tarjetaCredito['nombre'] = $datos->nombre;
+		$_tarjetaCredito['descripcion'] = "";
+		$_tarjetaCredito['numeracion'] = $datos->numeroTarjeta;
+		$_tarjetaCredito['fechaExpiracion'] = $datos->fechaexpiracion;
+		$_tarjetaCredito['cvv'] = $datos->cvv;
+		$_tarjetaCredito['calle'] = $datos->calle;
+		$_tarjetaCredito['numero'] = $datos->numeroExterior;
+		$_tarjetaCredito['colonia'] = $datos->colonia;
+		$_tarjetaCredito['codigoPostal'] = $datos->codigoPostal;
+		$_tarjetaCredito['ciudad'] = $datos->ciudad;
+		$_tarjetaCredito['estado'] = $datos->estado;
+		$_tarjetaCredito['pais'] = $datos->pais;
+		$_tarjetaCredito = (object)$_tarjetaCredito;		
+		$_tarjetaCredito = $this->agregarTarjetaCredito($_tarjetaCredito);
+		if (property_exists($_tarjetaCredito,'error')) {
+			return new Error('Error fatal: error al intentar guardar los datos de la tarjeta de crédito, por favor asegurese de haberlos introducido de manera correcta.', $_tarjetaCredito->error);
+		}
+
+		$_tarjetaCreditoUsuarioId= $this->obtenerTarjetaCreditoUsuarios();
+		$_tarjetaCreditoUsuarioId = $this->obtenerId($_tarjetaCreditoUsuarioId);
+		
+		//Registrar tarjetaCredito-usuario
+		$_tarjetaCreditoUsuario =  array();
+		$_tarjetaCreditoUsuario['usuarioId'] = $_usuario->id;
+		$_tarjetaCreditoUsuario['tarjetaCreditoId'] = $_tarjetaCreditoUsuarioId;
+		$_tarjetaCreditoUsuario = (object)$_tarjetaCreditoUsuario;
+		$_tarjetaCreditoUsuario = $this->agregarTarjetaCreditoUsuario($_tarjetaCreditoUsuario);
+		if (property_exists($_tarjetaCreditoUsuario,'error')) {
+			return new Error('Error fatal: error al intentar guardar la relación TarjetaCredito-Usuario. Por favor contacte al administrador.', $_tarjetaCreditoUsuario->error);
+		}
+		
+		//Obtener el id del tipo de pago de tarjeta de credito
+		$_tipoPagoId = "";
+		$_tipoPago = $this->obtenerTipoPagos();
+		if (!is_array($_tipoPago) && !property_exists($_tipoPago,'error')) {
+			if (strcmp($_tipoPago->nombre, 'Tarjeta de credito') == 0) {
+				$_tipoPagoId = $_tipoPago->id;
+			}
+		} elseif (is_array($_tipoPago)) {
+			foreach ($_tipoPago as $llave => $valor) {
+				if (strcmp($valor->nombre, 'Tarjeta-de-credito') == 0) {
+					$_tipoPagoId = $valor->id;
+					break;
+				}
+			}			
+		} else {
+			return new Error("Error Fatal: no se pudieron encontrar los tipos de pago disponibles.","Error al intentar encontrar el id para el tipo de pago: Tarjeta de credito");
+		}
+		
+		//Regisrar pago
+		$_idPago = $this->obtenerPagos();
+		$_idPago = $this->obtenerId($_idPago);
+		
+			//Necesito la cantidad a pagar!! -_-
+			$_cantidad = "";
+			//Obtener subasta
+			$_subasta['id'] = $datos->idSubasta;
+			$_subasta = (object)$_subasta;			
+			$_tmpofertas = $this->obtenerOfertaPorSubastaId($_subasta);
+			if (!is_array($_tmpofertas) && property_exists($_tmpofertas,'error')) {
+				return new Error('Error fatal: No se encontró la cantidad de la subasta para la que se pretende realizar el pago. Por favor contacte al administrador.', 'No se encontraron ofertas para la subasta con id: ' . $_subasta->id);
+			}
+			if (!is_array($_tmpofertas) && !property_exists($_tmpofertas,'error')) {
+				$_cantidad = $_tmpofertas->cantidad;
+			} elseif (is_array($_tmpofertas)) {
+				$_tmpMaxCant = 0;
+				foreach ($_tmpofertas as $l => $v) {
+					if ($v->cantidad > $_tmpMaxCant) {
+						$_tmpMaxCant = $v->cantidad;
+					}
+				}
+				$_cantidad = $_tmpMaxCant;
+			}
+			if(strcmp($_cantidad, "") == 0) {
+				return new Error("Error Fatal: no se pudo realizar el pago. Por favor contacte al administrador","Error al intentar encontrar la cantidad a pagar");
+			}
+		
+		$_pago['id'] = $_idPago;
+		$_pago['tipoPagoId'] = $_tipoPagoId;
+		$_pago['subastaId'] = $datos->idSubasta;
+		$_pago['fecha'] = date('Y-m-d h:i:s');
+		$_pago['pagoAceptado'] = true; //Tenemos mucho dineros!
+		$_pago['cantidad'] = $_cantidad;
+		$_pago = (object)$_pago;
+		$_pago = $this->agregarPago($_pago);
+		if (property_exists($_pago,'error')) {
+			return new Error('Error fatal: error al intentar guardar el pago. Por favor contacte al administrador.', $_pago->error);
+		}
+		return $_pago;
+	}
 			
 	private function obtenerId($arr) {
 		if(is_array($arr)) {

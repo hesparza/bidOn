@@ -39,8 +39,8 @@ function cargarDatos() {
 		var relacion = 'Ofertó';
 		var estado = subasta.estadoSubasta;
 		if (subasta.gano) {
-			realcion ='<a href="pago.php?id="'+ subasta.id +'>GANADOR! -- Pagar</a>';
-			estado = 'Inactiva';
+			relacion ='<a href="pago.php?id='+ subasta.id +'">Click aqui para pagar</a>';
+			estado = 'Ganador!!';
 		}
 		$('#misSubastas > tbody:last').append('<tr>' +
 				'<td><a href="subasta.php?id='+ subasta.id + '">' + subasta.articulo.nombre +'</a></td>' +

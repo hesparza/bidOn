@@ -211,6 +211,7 @@ class Controlador {
 			case 'ActivarSubasta':
 			case 'DesactivarSubasta':
 			case 'ActualizarGanadores':
+			case 'RealizarPago':
 				$nombreMetodo =  lcfirst($this->_parametros[1]);
 // 				echo '$nombreMetodo ->-> ' .$nombreMetodo . ' <-<- ';
 				if(method_exists($this->_negocios, $nombreMetodo)) {
