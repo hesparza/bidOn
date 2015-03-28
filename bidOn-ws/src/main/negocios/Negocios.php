@@ -845,18 +845,14 @@ class Negocios {
 			if ($diasRestantes < 0) {
 				$_listaSubastasFinalizadas[] = $valor;
 			}
-		echo '_-Id Subasta: '.$valor->id .'-_'; 
-		echo '_-$fechaActual: '.$fechaActual .'-_';
-		echo '_-$fechaFin: '.$fechaFin .'-_';
-		echo '_-$segundos: '.$segundos .'-_';
-		echo '_-$diasRestantes: '.$diasRestantes .'-_';
 		}
-		print_r($_listaSubastasFinalizadas);
 		//Obtener ganador para cada subasta
 		$_listaGanadores = array();
 		foreach ($_listaSubastasFinalizadas as $llave => $valor) {
-			$_tmpofertas = $this->obtenerOfertaPorSubastaId($valor->id);
-			print_r($this->obtenerOfertaPorSubastaId($valor->id));
+			$_tmpofertas = array();
+			$_tmpofertas['subastaId'] = $valor->id;
+			$_tmpofertas = (object)$_tmpofertas;
+			$_tmpofertas = $this->obtenerOfertaPorSubastaId($_tmpofertas);
 			if (!is_array($_tmpofertas) && !property_exists($_articulo,'error')) {
 				$_listaGanadores[$valor->id] = $_tmpofertas->usuarioId; 
 			} elseif (is_array($_tmpofertas)) {
@@ -872,9 +868,10 @@ class Negocios {
 					$_listaGanadores[$valor->id] = $_tmpGanadorId;
 					$_tmpGanadorId = "";
 				}				
+			} else {
+				return new Error("Error Fatal: No se pudo obtener un ganador de subasta",$_tmpGanadorId->error);
 			}
 		}
-		print_r($_listaGanadores);
 		
 		//Obtener el id del estado de las subastas inactivas
 		$estadoSubastas = $this->obtenerEstadoSubastas();
