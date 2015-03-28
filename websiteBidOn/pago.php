@@ -32,8 +32,13 @@ echo '<input type="hidden" id="ID_SUBASTA" name="ID_SUBASTA" value="'.$_GET["id"
 						<form name="FormaPago" method="post" action="" id="FormaPago">
 							<table width="100%" border="0" cellspacing="10" cellpadding="0">
 								<tr>
-									<td colspan="3"><label>Datos de pago:</label></td>
+									<td><output id="tipoSubasta">Tipo de subasta:</output></td>
+									<td><output id="cantidad">Cantidad a pagar: $__.__</output></td>
+									<td></td>
 								</tr>
+								<tr>
+									<td colspan="3"><label>Datos de pago:</label></td>									
+								</tr>								
 								<tr>
 									<td>
 										<label>Forma de pago: 

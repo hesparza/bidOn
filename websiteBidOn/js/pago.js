@@ -2,6 +2,7 @@
 var formaPago = "";
 var nomUsuario = "";
 var idSubasta = "";
+var cantidad = "";
 var fc = new FuncionesComunes();
 
 var verificarPago = function(obj) {
@@ -14,6 +15,19 @@ var verificarPago = function(obj) {
 			fc.insertarHeaderHtml("comentarios", 2, "Gracias " + nomUsuario+ "!");
 			fc.insertarHeaderHtml("comentarios", 2, "Tu pago ha quedado registrado satisfactoriamente y tu envio estará en camino pronto.");
 			fc.insertarHeaderHtml("comentarios", 2, "Haz click <a href=\"inicioSesion.php\">aqui</a> para seguir subastando.");
+		}			
+	}	
+}
+
+var cargarCantidad = function(obj) {
+	if ( typeof obj === 'object') {
+		if (obj.datos.hasOwnProperty('error')) {
+			alert(obj.datos.mensaje);
+			console.log("Mensaje de error: " + obj.datos.mensaje + ", error reportado: " + obj.datos.error);
+		} else {
+			cantidad = obj.datos.cantidad;
+			$("#cantidad").empty().append('Cantidad a pagar: $' + cantidad);
+			$("#tipoSubasta").empty().append('Tipo de subasta: ' + obj.datos.tipoSubasta);
 		}			
 	}	
 }
@@ -54,12 +68,14 @@ $(document).ready(function() {
 	idSubasta = $("#ID_SUBASTA").val();
 	if (nomUsuario == "" || nomUsuario === 'undefined') {
 		alert("Error fatal: no se encontro un usuario valido en la sesion. Por favor contacte al administrador.");
-		return false;
+		window.location.replace('index.php');
 	}
 	if (idSubasta == "" || idSubasta === 'undefined') {
 		alert("Error fatal: no se encontro un id de subasta válido para pagar. Por favor intente de nuevo o contacte a su administrador.");
-		return false;
-	}	
+		window.location.replace('index.php');
+	}
+	//Cargar cantidad
+	fc.llamadaWS({id:idSubasta},CONFIGURACION.get('CANTIDAD_PAGO'),'POST', false, cargarCantidad, falloLlamada);
 	//Cargar formas de pago
 	//cargarFormasDePago(); //TODO <-- Implementar esta funcion
 	$("#FormaPago").submit(function() {        

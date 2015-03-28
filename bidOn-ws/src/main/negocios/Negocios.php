@@ -845,12 +845,18 @@ class Negocios {
 			if ($diasRestantes < 0) {
 				$_listaSubastasFinalizadas[] = $valor;
 			}
+		echo '_-Id Subasta: '.$valor->id .'-_'; 
+		echo '_-$fechaActual: '.$fechaActual .'-_';
+		echo '_-$fechaFin: '.$fechaFin .'-_';
+		echo '_-$segundos: '.$segundos .'-_';
+		echo '_-$diasRestantes: '.$diasRestantes .'-_';
 		}
-		
+		print_r($_listaSubastasFinalizadas);
 		//Obtener ganador para cada subasta
 		$_listaGanadores = array();
 		foreach ($_listaSubastasFinalizadas as $llave => $valor) {
 			$_tmpofertas = $this->obtenerOfertaPorSubastaId($valor->id);
+			print_r($this->obtenerOfertaPorSubastaId($valor->id));
 			if (!is_array($_tmpofertas) && !property_exists($_articulo,'error')) {
 				$_listaGanadores[$valor->id] = $_tmpofertas->usuarioId; 
 			} elseif (is_array($_tmpofertas)) {
@@ -868,6 +874,7 @@ class Negocios {
 				}				
 			}
 		}
+		print_r($_listaGanadores);
 		
 		//Obtener el id del estado de las subastas inactivas
 		$estadoSubastas = $this->obtenerEstadoSubastas();
@@ -1064,6 +1071,88 @@ class Negocios {
 		}
 		return $_pago;
 	}
+	
+	/**
+	 * Obtener la cantidad a pagar por una subasta dependiendo de su tipo
+	 */	
+	function cantidadPago ($datos) {
+		if (!property_exists($datos,'id')) {
+				return new Error('Error fatal: no se encontró el id de la subsata a pagar. Por favor contacte al administrador.','El objeto proporcionado no contiene el id de la subasta.');				
+		}
+
+		//Obtener subasta
+		$_subasta['id'] = $datos->id;
+		$_subasta = (object)$_subasta;
+		$_subasta = $this->obtenerSubastaPorId($_subasta);
+		if (property_exists($_subasta,'error')) {
+			return new Error('Error fatal: No se pudo identificar la subasta seleccionada. Por favor contacte al administrador.', 'No se encontro una subasta con el id ' . $_subasta->id);
+		}
+
+		//Obtener ofertas para la subasta
+		$_listaOfertas = array();
+		$_ofertas['subastaId'] = $_subasta->id;
+		$_ofertas = (object)$_ofertas;
+		$_ofertas = $this->obtenerOfertaPorSubastaId($_ofertas);
+		
+		//Determinar la cantidad mas alta y la segunda cantidad mas alta
+		$_cantidadMasAlta = 0;
+		$_segundaCantidadMasAlta = 0;		
+		if (!is_array($_ofertas) && !property_exists($_ofertas,'error')) {
+			$_cantidadMasAlta = $_segundaCantidadMasAlta =$_ofertas->cantidad;
+		} else if (is_array($_ofertas)) {
+			foreach ($_ofertas as $llave => $valor) {
+				if ($valor->cantidad > $_cantidadMasAlta) {
+					$_segundaCantidadMasAlta = $_cantidadMasAlta;
+					$_cantidadMasAlta = $valor->cantidad;
+				} elseif($valor->cantidad > $_segundaCantidadMasAlta) {
+					$_segundaCantidadMasAlta = $valor->cantidad;
+				}
+			}
+		}
+
+		//Obtener el tipo de subasta estado subasta
+		$_tipoSubastas = $this->obtenerTipoSubastas();
+		$_inglesaId = "";
+		$_inglesaId = "";
+		foreach ($_tipoSubastas as $llave => $valor) {
+			if (strcmp($valor->nombre, 'Inglesa') == 0) {
+				$_inglesaId= $valor->id;
+			}
+			if (strcmp($valor->nombre, 'Vickrey') == 0) {
+				$_vickReyId= $valor->id;
+			}						
+		}
+		if (strcmp($_inglesaId, "") == 0) {
+			return new Error('Error fatal: no se encontró el tipo de subasta inglesa. Por favor contacte al administrador.', 'No se pudo encontrar un id para tipo de subasta Inglesa');
+		}
+		if (strcmp($_vickReyId, "") == 0) {
+			return new Error('Error fatal: no se encontró el tipo de subasta vickrey. Por favor contacte al administrador.', 'No se pudo encontrar un id para tipo de subasta Vickrey');
+		}
+
+		//Si es subasta inglesa regresar la cantidad de la oferta mas alta		
+		if ($_subasta->tipoSubastaId == $_inglesaId) {
+			$_subasta = (array)$_subasta;
+			$_subasta['tipoSubasta'] = 'Inglesa';
+			$_subasta['cantidad'] = $_cantidadMasAlta;
+			$_subasta = (object)$_subasta;
+			return $_subasta;
+		}
+		//Si es subasta vickrey regresar la cantidad de la segunda oferta mas alta
+		if ($_subasta->tipoSubastaId == $_vickReyId) {
+			$_subasta = (array)$_subasta;
+			$_subasta['tipoSubasta'] = 'Vickrey';
+			if ($_segundaCantidadMasAlta == 0) {
+				$_subasta['cantidad'] = $_cantidadMasAlta;
+			} else {
+				$_subasta['cantidad'] = $_segundaCantidadMasAlta;
+			}
+			$_subasta = (object)$_subasta;
+			return $_subasta;
+		}
+		
+		//No deberia de llegar aqui
+		return new Error('Error fatal: no se pudo determinar el tipo de subasta para asignar la cantidad a pagar. Por favor contacte al administrador.', 'El tipo de subasta no coincidio con ninguno de los tipos de subasta disponibles.');
+	}	
 			
 	private function obtenerId($arr) {
 		if(is_array($arr)) {
