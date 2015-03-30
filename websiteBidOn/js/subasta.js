@@ -45,15 +45,16 @@ function cargarImagenes() {
 	$("#imagenes").append("<img src="+imagenes[0].ruta+" alt=\"\" width=\"300\" height=\"200\">");
 }
 
-function cargarDatos() {
-	$("#nombre").empty().append("<label>Nombre: " + articulo.nombre + "<label>");
-	$("#estado").empty().append("<label>Estado: " + estadoSubasta.nombre + "<label>");
-	$("#precioInicial").empty().append("<label>Precio inicial: $" + articulo.precio + "<label>");
-	$("#tipo").empty().append("<label>Tipo de subasta: " + tipoSubasta.nombre + "<label>");
-	$("#cantidad").empty().append("<label>Cantidad: " + articulo.cantidad + "<label>");
-	$("#fechainicio").empty().append("<label>Fecha de inicio: " + subasta.fechaInicio + "<label>");
-	$("#fechafin").empty().append("<label>Fecha de finalización: " + subasta.fechaFin + "<label>");
-	$("#descripcion").empty().append("<label>Descripción:<br/>" + articulo.descripcion + "<label>");
+function cargarDatos() {	
+	$("#nomUsuario").empty().append("<label>Creador: " + $("#NOM_USUARIO").val() + "</label>");
+	$("#nombre").empty().append("<label>Nombre: " + articulo.nombre + "</label>");
+	$("#estado").empty().append("<label>Estado: " + estadoSubasta.nombre + "</label>");
+	$("#precioInicial").empty().append("<label>Precio inicial: $" + articulo.precio + "</label>");
+	$("#tipo").empty().append("<label>Tipo de subasta: " + tipoSubasta.nombre + "</label>");
+	$("#cantidad").empty().append("<label>Cantidad: " + articulo.cantidad + "</label>");
+	$("#fechainicio").empty().append("<label>Fecha de inicio: " + subasta.fechaInicio + "</label>");
+	$("#fechafin").empty().append("<label>Fecha de finalización: " + subasta.fechaFin + "</label>");
+	$("#descripcion").empty().append("<label>Descripción:<br/>" + articulo.descripcion + "</label>");
 }
 
 function cargarOfertas() {
