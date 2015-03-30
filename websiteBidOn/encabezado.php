@@ -16,8 +16,10 @@ session_start();
 	      		} elseif(isset($_SESSION["rol"]) && isset($_SESSION["estadoUsuario"]) &&
 	      			strcmp($_SESSION["rol"],'Administrador') == 0 && 
 	      			strcmp($_SESSION["estadoUsuario"],'Activo') == 0) {
+	      			echo '<li><a href="nuevaSubasta.php">Crear Subasta</a></li>';
+	      			echo '<li><a href="misSubastas.php">Mis Subastas</a></li>';
 	      			echo '<li><a href="administrador.php">Administrar Subastas</a></li>';
-	      			echo '<li><a href="#">Administrar Usuarios</a></li>';	      			
+	      			echo '<li><a href="usuarios.php">Administrar Usuarios</a></li>';
 	      		}
 	        } else {
 	        	echo '<li><a href="opiniones.php">Opiniones</a></li>';

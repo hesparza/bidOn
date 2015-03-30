@@ -651,3 +651,41 @@ pre
 .jcarousel-control-next:hover span {
     display: block;
 }
+
+.editarUsuario input[type="text"], .editarUsuario input[type="password"], .editarUsuario input[type="text"], .editarUsuario input[type="password"], .editarUsuario input[type="date"] {
+	clear: both;
+	display: block;
+	margin-top: 5px;
+	width: 100px;
+	height: 30px;
+	background: #EBEBEB;
+	border: 1px solid #CCC;
+	outline: none;
+}
+
+ .editarUsuario select {
+ 	clear: both;
+	display: block;
+	margin-top: 5px;
+	width: 70px;
+	height: 30px;
+	background: #EBEBEB;
+	border: 1px solid #CCC;
+	outline: none;
+ }
+ .editarUsuario button {
+	clear: both;
+	display: block;
+	position: relative;
+	width: 80px;
+	height: 35px;
+	margin-top: 0px;
+	background: #FF9900;
+	border: none;
+	outline: none;
+	color: #FFFFFF;
+	cursor: pointer;
+}
+.editarUsuario button:hover {
+	background: #FF6600;
+}

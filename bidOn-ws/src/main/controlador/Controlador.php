@@ -74,32 +74,11 @@ class Controlador {
 	 */
 	function obtenerParametros() {
 		$cuerpo = file_get_contents('php://input');
-		//print_r($cuerpo);
-// 		echo '____$cuerpo___=' . $cuerpo . '______';
 		if (isset($cuerpo) == false && $cuerpo !== "") {
 			return '';
 		}			
 		switch($_SERVER['REQUEST_METHOD']) {
-			case 'GET':
-// 				$resultado = array();		
-// 				$datosDeEntrada = json_decode($cuerpo);
-// 				for ($i = 2; $i < sizeof($this->_parametros); $i++) {
-// 					$llave = $this->_parametros[$i];
-// 					if (isset($datosDeEntrada)) {
-// // 						$i === 2 ? $resultado = $datosDeEntrada->{$llave} : $resultado .= ',' . $datosDeEntrada->{$llave};
-// 						$resultado[$llave]=$datosDeEntrada->{$llave};
-// 					}
-// // 					echo 'llave== ' . $llave . '=====';
-// // 					echo '$datosDeEntrada->{$llave}   =  '. $datosDeEntrada->{$llave} . '     __';
-					
-// // 					print_r($datosDeEntrada);
-					
-
-// 				}
-// 				$resultado = (object)$resultado;
-// 				if ($resultado === "") {
-// 					throw new Exception("Metodo no disponible", 405);
-// 				}		
+			case 'GET':	
 				$esLlave = true;
 				$resultado = array();
 				for ($i = 2; $i < sizeof($this->_parametros); $i++) {
@@ -164,7 +143,6 @@ class Controlador {
 			case 'Usuario':
 			case 'UsuarioDireccion':
 	        	$nombreMetodo = $this->_prefijo . $this->_parametros[1] . $this->complementarNombre();
-// 	        	echo '$nombreMetodo ->-> ' .$nombreMetodo . ' <-<- ';
 	        	if(method_exists($this->_negocios, $nombreMetodo)) {
 	        		$datos = $hayParametros ? $this->_negocios->$nombreMetodo($this->obtenerParametros()) : $this->_negocios->$nombreMetodo();
 	        	} else {
@@ -192,7 +170,6 @@ class Controlador {
 			case 'Usuarios':
 			case 'UsuarioDirecciones':
 				$nombreMetodo = $this->_prefijo . $this->_parametros[1];
-// 				echo '$nombreMetodo ->-> ' .$nombreMetodo . ' <-<- ';
 				if(method_exists($this->_negocios, $nombreMetodo)) {
 					$datos = $this->_negocios->$nombreMetodo();
 				} else {
@@ -213,8 +190,8 @@ class Controlador {
 			case 'ActualizarGanadores':
 			case 'RealizarPago':
 			case 'CantidadPago':
+			case 'ObenerUsuariosCompletos':
 				$nombreMetodo =  lcfirst($this->_parametros[1]);
-// 				echo '$nombreMetodo ->-> ' .$nombreMetodo . ' <-<- ';
 				if(method_exists($this->_negocios, $nombreMetodo)) {
 					$datos = $this->_negocios->$nombreMetodo($this->obtenerParametros());
 				} else {

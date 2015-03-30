@@ -68,17 +68,4 @@ $(document).ready(function() {
 	//cargar datos de las subastas
 	fc.llamadaWS({nomUsuario:$("#NOM_USUARIO").val()},CONFIGURACION.get('MIS_SUBASTAS'),'POST', false, cargarSubastas, falloLlamada);
 	cargarDatos();
-//	$("#btnOfertar").click(function() {
-//		if (!fc.todosLosCamposLlenos([$("#cantidadOferta").val()]))
-//		{
-//			alert('Por favor introduza una cantidad para ofertar');
-//			return false;
-//		}
-//		if (!fc.esNumericoDecimal($("#cantidadOferta").val())) {
-//			alert('La cantidad introducida no es valida.');
-//			return false;
-//		}		
-//		var datos = {"nomUsuario":$("#NOM_USUARIO").val(),"idSubasta":$("#ID_SUBASTA").val(),"cantidad":$("#cantidadOferta").val()};
-//		fc.llamadaWS(datos,CONFIGURACION.get('REGISTRO_NUEVA_OFERTA'),'POST', false, cargarNuevaOferta, falloLlamada);
-//	});
 });

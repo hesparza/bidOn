@@ -22,7 +22,6 @@ echo '<input type="hidden" id="NOM_USUARIO" name="NOM_USUARIO" value="'.$_SESSIO
 <div class="wrapper-container">
   <?php include_once $_SERVER['DOCUMENT_ROOT'] . '/websiteBidOn/encabezado.php'; ?>  
   <div class="wrapper-content">  
-    <?php include_once $_SERVER['DOCUMENT_ROOT'] . '/websiteBidOn/carrusel.php'; ?>
         <div class="content">
           <h2>Administrar Subastas</h2>
           <div class="comentarios">       
