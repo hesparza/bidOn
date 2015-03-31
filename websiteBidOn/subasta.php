@@ -28,33 +28,28 @@ echo '<input type="hidden" id="NOM_USUARIO" name="NOM_USUARIO" value="'.$_SESSIO
   <div class="wrapper-content">  	
   	<div class="content">
 					<h2>Subasta</h2>
-					<div class="comentarios" id="comentarios">
-							<table width="100%" border="0" cellspacing="10" cellpadding="0">
+					<div class="detalles">
+							<table width="100%" border="0" cellpadding="10" cellspacing="0" id="tablaDetalles">
 								<tr>
 									<td colspan="2">
-										<h2 id="nombre"></h2>
+										<h3 id="nombre"></h3>
 									</td>
 								</tr>
 								<tr>
 									<td>
-									<!--
 									<div class="jcarousel-wrapper">
 						                <div data-jcarousel="true" data-wrap="circular" class="jcarousel">
 						                    <ul>
-						                        <li><img src="img/productPreview01.jpg" alt="" width="300" height="200"></li>
-						                        <li><img src="img/productPreview02.jpg" alt="" width="300" height="200"></li>
+					           		 			<output id="imagenes"></output>	
 						                    </ul>
 						                </div>
 						                <a data-jcarousel-control="true" data-target="-=1" href="#" class="jcarousel-control-prev">&lsaquo;</a>
 						                <a data-jcarousel-control="true" data-target="+=1" href="#" class="jcarousel-control-next">&rsaquo;</a>
 					           		</div>
-					           		 -->	
-					           		 <output id="imagenes">
-					           		 	
-					           		 </output>					
+				
 									</td>
 									<td>
-										<output id="nomUsuario"><label></label></output>
+<!-- 										<output id="nomUsuario"><label></label></output> -->
 										<output id="estado"><label></label></output>
 										<output id="precioInicial"><label></label></output>
 										<output id="tipo"><label></label></output>
@@ -65,30 +60,36 @@ echo '<input type="hidden" id="NOM_USUARIO" name="NOM_USUARIO" value="'.$_SESSIO
 								</tr>
 								<tr>
 									<td colspan="2">
+										<output ><label>Descripcion</label></output>
+									</td>
+								</tr>								
+								<tr>
+									<td colspan="2">
 										<output id="descripcion"><label></label></output>
 									</td>
 								</tr>
 								<tr>
 									<td colspan="2">
-										<label id="ofertas">Ofertas:</label>
-										<table id="tablaOfertas" width="100%" border="0" cellspacing="10" cellpadding="0">
+										<output><label id="ofertas">Ofertas:</label></output>
+									</td>
+								<tr>
+									<td colspan="2">	
+              						<table width="100%" border="0" align="right" cellpadding="10" cellspacing="0" id="tablaOfertas">
 											<tbody>
-											</tbody> 
-											<!-- Aqui van las ofertas -->
+												<!-- Aqui van las ofertas -->
+											</tbody> 											
 										</table>
 									</td>
 								</tr>
 								<tr>
 									<td>
-										<label id="textoOfertar">Ofertar:</label>
+										<output><label id="textoOfertar">Ofertar:</label></output>
 									</td>
 								</tr>																
 								<tr>
 									<td>
-										<label><input type="text" name="cantidadOferta" id="cantidadOferta"></label>
-									</td>								
-									<td>
-										<button type="button" id="btnOfertar" class="btnEnviar">Ofertar</button>
+										<input type="text" name="cantidadOferta" id="cantidadOferta">
+										<input type="button" id="btnOfertar" class="btnEnviar" value="Ofertar"/>
 									</td>
 								</tr>
 							</table>

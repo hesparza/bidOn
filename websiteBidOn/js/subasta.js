@@ -46,24 +46,25 @@ function cargarImagenes() {
 }
 
 function cargarDatos() {	
-	$("#nomUsuario").empty().append("<label>Creador: " + $("#NOM_USUARIO").val() + "</label>");
-	$("#nombre").empty().append("<label>Nombre: " + articulo.nombre + "</label>");
-	$("#estado").empty().append("<label>Estado: " + estadoSubasta.nombre + "</label>");
-	$("#precioInicial").empty().append("<label>Precio inicial: $" + articulo.precio + "</label>");
-	$("#tipo").empty().append("<label>Tipo de subasta: " + tipoSubasta.nombre + "</label>");
-	$("#cantidad").empty().append("<label>Cantidad: " + articulo.cantidad + "</label>");
-	$("#fechainicio").empty().append("<label>Fecha de inicio: " + subasta.fechaInicio + "</label>");
-	$("#fechafin").empty().append("<label>Fecha de finalización: " + subasta.fechaFin + "</label>");
-	$("#descripcion").empty().append("<label>Descripción:<br/>" + articulo.descripcion + "</label>");
+	//$("#nomUsuario").empty().append("<label>Creador: " + $("#NOM_USUARIO").val() + "</label>");
+	$("#nombre").empty().append("<label>Nombre:</label><span> " + articulo.nombre + "</span>");
+	$("#estado").empty().append("<label>Estado:</label><span> " + estadoSubasta.nombre + "</span>");
+	$("#precioInicial").empty().append("<label>Precio inicial:</label><span> $" + articulo.precio + "</span>");
+	$("#tipo").empty().append("<label>Tipo de subasta:</label><span> " + tipoSubasta.nombre + "</span>");
+	$("#cantidad").empty().append("<label>Cantidad:</label><span> " + articulo.cantidad + "</span>");
+	$("#fechainicio").empty().append("<label>Fecha de inicio:</label><span> " + subasta.fechaInicio + "</span>");
+	$("#fechafin").empty().append("<label>Fecha de finalización:</label><span> " + subasta.fechaFin + "</span>");
+	$("#descripcion").empty().append("<span>" + articulo.descripcion + "</span>");
 }
 
 function cargarOfertas() {
 	if (ofertasUsuarios.length > 0) {
+		$('#tablaOfertas > tbody:last').append('<tr><td><b>Usuario:</b></td><td><b>Fecha:</b></td><td><b>Cantidad:</b></td></tr>');
 		ofertasUsuarios.forEach(function(ofertaUsuario) {
-			$('#tablaOfertas > tbody:last').append('<tr><td><b>Usuario:</b> '+ ofertaUsuario.nomUsuario +' <b>Fecha:</b> ' + ofertaUsuario.fecha + ' <b>Cantidad:</b> $' + ofertaUsuario.cantidad + '</td></tr>');
+			$('#tablaOfertas > tbody:last').append('<tr><td>'+ ofertaUsuario.nomUsuario +'</td><td>' + ofertaUsuario.fecha + '</td><td>$' + ofertaUsuario.cantidad + '</td></tr>');
 		});		
 	} else {
-		$('#tablaOfertas > tbody:last').append('<tr><td>Aun no existen ofertas para esta subasta, ¡Se el primero en ofertar!</td></tr>');
+		$('#tablaOfertas > tbody:last').append('<tr><td colspan="3">Aun no existen ofertas para esta subasta, ¡Se el primero en ofertar!</td></tr>');
 	}
 }
 
