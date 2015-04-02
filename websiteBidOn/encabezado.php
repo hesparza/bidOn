@@ -22,7 +22,7 @@ session_start();
 	      			echo '<li><a href="usuarios.php">Administrar Usuarios</a></li>';
 	      		}
 	        } else {
-	        	echo '<li><a href="opiniones.php">Opiniones</a></li>';
+	        	<!-- echo '<li><a href="opiniones.php">Opiniones</a></li>'; -->
 	        	echo '<li><a href="contacto.php">Contacto</a></li>';
 	        }
 	        
