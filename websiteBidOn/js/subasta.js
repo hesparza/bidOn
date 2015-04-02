@@ -33,20 +33,18 @@ var cargarNuevaOferta = function(obj) {
 			console.log("Mensaje de error: " + obj.datos.mensaje + ", error reportado: " + obj.datos.error);
 		} else {
 			alert('Tu oferta ha sido registrada satisfactoriamente!');
-			$('#tablaOfertas > tbody:last').append('<tr><td><b>Usuario:</b> '+ $("#NOM_USUARIO").val() +' <b>Fecha:</b> ' + obj.datos.fecha + ' <b>Cantidad:</b> $' + obj.datos.cantidad + '</td></tr>').slideDown();
+			$('#tablaOfertas > tbody:last').append('<tr><td>'+ $("#NOM_USUARIO").val() +'</td><td>' + obj.datos.fecha + '</td><td>$' + obj.datos.cantidad + '</td></tr>');			
 		}			
 	}
 }
 
 function cargarImagenes() {
-//	imagenes.forEach(function(imagen) {
-//		$("#imagenes").append("<img src="+imagen.ruta+" alt=\"\" width=\"300\" height=\"200\">");
-//	});	
-	$("#imagenes").append("<img src="+imagenes[0].ruta+" alt=\"\" width=\"300\" height=\"200\">");
+	imagenes.forEach(function(imagen) {
+		$("#imagenes ul").append('<li><img src="' + imagen.ruta + '" width="300" height="200"></li>');
+	});	
 }
 
 function cargarDatos() {	
-	//$("#nomUsuario").empty().append("<label>Creador: " + $("#NOM_USUARIO").val() + "</label>");
 	$("#nombre").empty().append("<label>Nombre:</label><span> " + articulo.nombre + "</span>");
 	$("#estado").empty().append("<label>Estado:</label><span> " + estadoSubasta.nombre + "</span>");
 	$("#precioInicial").empty().append("<label>Precio inicial:</label><span> $" + articulo.precio + "</span>");
@@ -76,30 +74,12 @@ function validarPosibleOfertar() {
 		$("#btnOfertar").prop('disabled', true);
 		$("#btnOfertar").hide();
 		$("#cantidadOferta").hide();
-//		if ($("#NOM_USUARIO").val() === "") {
-//			alert("La sesion no es valida, por favor inicie sesion nuevamente");
-//			window.location.replace('index.php');
-//		}
 		if (estadoSubasta.nombre != 'Activa'){
 			$("#textoOfertar").empty().append("<b>No es posible ofertar ya que la subasta no esta activa</b>");	
 		}
 	}
 	
 }
-
-(function($) {
-    $(function() {
-        $('[data-jcarousel]').each(function() {
-            var el = $(this);
-            el.jcarousel(el.data());
-        });
-
-        $('[data-jcarousel-control]').each(function() {
-            var el = $(this);
-            el.jcarouselControl(el.data());
-        });
-    });
-})(jQuery);
 
 /**
  * Metodo principal
@@ -112,7 +92,6 @@ $(document).ready(function() {
 	cargarDatos();
 	cargarOfertas();
 	validarPosibleOfertar();
-	//TODO verificar fecha de finalizacion
 	
 	$("#btnOfertar").click(function() {
 		if (!fc.todosLosCamposLlenos([$("#cantidadOferta").val()]))

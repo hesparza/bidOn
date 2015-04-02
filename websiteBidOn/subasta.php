@@ -15,11 +15,13 @@ echo '<input type="hidden" id="NOM_USUARIO" name="NOM_USUARIO" value="'.$_SESSIO
 	rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="css/styles.css" />
 <link rel="stylesheet" href="css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="css/jcarousel.basic.css">
 <script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript" src="js/configuracion.js"></script>
 <script type="text/javascript" src="js/funcionesComunes.js"></script>
-<script type="text/javascript" src="js/jcarousel.js"></script>
 <script type="text/javascript" src="js/subasta.js"></script>
+<script type="text/javascript" src="js/jcarousel.js"></script>
+<script type="text/javascript" src="js/jcarousel.basic.js"></script>
 </head>
 <body>
 	<div class="wrapper-container">
@@ -37,16 +39,15 @@ echo '<input type="hidden" id="NOM_USUARIO" name="NOM_USUARIO" value="'.$_SESSIO
 								</tr>
 								<tr>
 									<td>
-									<div class="jcarousel-wrapper">
-						                <div data-jcarousel="true" data-wrap="circular" class="jcarousel">
-						                    <ul>
-					           		 			<output id="imagenes"></output>	
-						                    </ul>
-						                </div>
-						                <a data-jcarousel-control="true" data-target="-=1" href="#" class="jcarousel-control-prev">&lsaquo;</a>
-						                <a data-jcarousel-control="true" data-target="+=1" href="#" class="jcarousel-control-next">&rsaquo;</a>
-					           		</div>
-				
+										<div class="jcarousel-wrapper">
+							                <div class="jcarousel" id="imagenes">
+							                    <ul>
+							                    </ul>
+							                </div>  
+	                						<a href="#" class="jcarousel-control-prev">&lsaquo;</a>
+	                						<a href="#" class="jcarousel-control-next">&rsaquo;</a>
+											<p class="jcarousel-pagination"></p>              						
+						           		</div>
 									</td>
 									<td>
 <!-- 										<output id="nomUsuario"><label></label></output> -->
@@ -60,7 +61,7 @@ echo '<input type="hidden" id="NOM_USUARIO" name="NOM_USUARIO" value="'.$_SESSIO
 								</tr>
 								<tr>
 									<td colspan="2">
-										<output ><label>Descripcion</label></output>
+										<output ><label>Descripci&oacute;n</label></output>
 									</td>
 								</tr>								
 								<tr>
