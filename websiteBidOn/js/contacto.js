@@ -1,11 +1,7 @@
 var verificarEnvioCorreo = function(obj) {
 	if ( typeof obj === 'object') {
-		if (obj.datos.hasOwnProperty('error')) {
-			alert(obj.datos.mensaje);
-			console.log("Mensaje de error: " + obj.datos.mensaje + ", error reportado: " + obj.datos.error);
-		} else {
-			alert("Tu correo ha sido enviado satisfactoriamente al equipo de BidOn. \nMuchas gracias!");
-		}			
+		alert("Tu correo ha sido enviado satisfactoriamente al equipo de BidOn. \nMuchas gracias!");
+		window.location.replace('index.php');
 	}	
 }
 
