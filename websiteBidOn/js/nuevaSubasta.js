@@ -88,7 +88,7 @@ function ParseFile(file) {
 			reader.onload = function(e) {
 				Output(
 					"<p><strong>" + file.name + ":</strong><br />" +
-					'<img src="' + e.target.result + '" /></p>'
+					'<img src="' + e.target.result + '" width="300" height="200" /></p>'
 				);
 			}
 			reader.readAsDataURL(file);
