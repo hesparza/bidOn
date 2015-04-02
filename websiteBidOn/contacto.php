@@ -12,12 +12,15 @@ session_start();
 <link href='http://fonts.googleapis.com/css?family=Ubuntu:400,500,700' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="css/styles.css" />
 <link rel="stylesheet" href="css/font-awesome.min.css">
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/configuracion.js"></script>
+<script type="text/javascript" src="js/funcionesComunes.js"></script>
+<script type="text/javascript" src="js/contacto.js"></script>
 </head><body>
 <div class="wrapper-container">
   <?php include_once $_SERVER['DOCUMENT_ROOT'] . '/websiteBidOn/encabezado.php'; ?>
   </div>
   <div class="wrapper-content">
-    <?php include_once $_SERVER['DOCUMENT_ROOT'] . '/websiteBidOn/carrusel.php'; ?>
     <div class="content" id="userZone">
       <h2>Contacto</h2>
       <ul class="ingreso">
@@ -26,13 +29,13 @@ session_start();
         </li>
         <li>
           <h3>Estamos aquí para ayudarlo</h3>
-          <form name="form1" method="post" action="">
+          <form name="FormaContacto" id="FormaContacto" method="post" action="">
             <label>Correo electrónico
-            <input type="text" name="email" id="email" required></label>
+            <input type="text" name="correo" id="correo" required></label>
             <label>Asunto
-            <input type="text" name="subject" id="subject" required></label>
+            <input type="text" name="asunto" id="asunto" required></label>
             <label>Mensaje
-            <textarea name="opinion" cols="" rows="8" required></textarea>
+            <textarea name="opinion" cols="" rows="8" required id="mensaje"></textarea>
             <input type="submit" name="login" id="login" value="Enviar">
           </form>
         </li>

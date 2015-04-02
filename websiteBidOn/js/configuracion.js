@@ -28,6 +28,7 @@ var CONFIGURACION = (function() {
 		'TIPO_SUBASTAS' : SERVIDOR_ACTUAL_WS + 'TipoSubastas',
 		'SERVIDOR_URL' : SERVIDOR_ACTUAL,
 		'URL_SUBIR_IMAGENES' : SERVIDOR_ACTUAL + 'subirImagenes.php',		
+		'ENVIAR_CORREO' : SERVIDOR_ACTUAL + 'enviarCorreo.php'
 	};
 
      return {
