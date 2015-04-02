@@ -104,13 +104,6 @@ class Controlador {
 		}
 	}
 
-	private function obtenerUsuarioPorNomUsuario($nomUsuario) {
-		return $this->_negocios->obtenerUsuarioPorNomUsuario($nomUsuario);
-	}
-
-	private function agregarUsuario($nomUsuario) {
-		return $this->_negocios->agregarUsuario($nomUsuario);
-	}
 	/**
 	 * Determina el método que hay que llamar
 	 */
