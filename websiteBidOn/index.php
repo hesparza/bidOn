@@ -8,7 +8,7 @@ session_start();
 <!-- SlidesJS Required (if responsive): Sets the page width to the device width. -->
 <meta name="viewport" content="width=device-width">
 <!-- End SlidesJS Required -->
-<title>BidOn - Portal Social de Subastas en Línea</title>
+<title>BidOn - Portal Social de Subastas en Líne</title>
 <link href='http://fonts.googleapis.com/css?family=Ubuntu:400,500,700' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="css/styles.css" />
 <link rel="stylesheet" href="css/font-awesome.min.css">
